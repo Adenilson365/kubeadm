@@ -1,0 +1,57 @@
+# Vagrantfile - 3 VMs zeradas para instalação manual do kubeadm
+# Objetivo de ter as VMs acessíveis via SSH, mas para instalação manual do kubeadm e com recursos mínimos sem precisar se preocupar com SO.
+# Isso facilita criar e destruir infra local e focar no aprendizado do Kubernetes.
+
+PUBKEY_PATH = File.expand_path("~/.ssh/id_rsa.pub")
+PUBKEY      = File.exist?(PUBKEY_PATH) ? File.read(PUBKEY_PATH).strip : ""
+
+if PUBKEY.empty?
+  raise "Nao encontrei sua chave publica em: #{PUBKEY_PATH}. Ajuste o PUBKEY_PATH."
+end
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+  config.ssh.insert_key = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  nodes = [
+    { name: "cp1", ip: "192.168.56.11", mem: 2048, cpu: 2 },
+    { name: "cp2", ip: "192.168.56.12", mem: 2048, cpu: 2 },
+    { name: "cp3", ip: "192.168.56.13", mem: 2048, cpu: 2 }
+  ]
+
+  nodes.each do |node|
+    config.vm.define node[:name] do |vm|
+      vm.vm.hostname = node[:name]
+      vm.vm.network "private_network", ip: node[:ip]
+
+      vm.vm.provider "virtualbox" do |vb|
+        vb.name = "k8s-#{node[:name]}"
+        vb.memory = node[:mem]
+        vb.cpus = node[:cpu]
+      end
+
+      # Provisionamento minimo: só adiciona a sua chave publica
+      vm.vm.provision "shell", privileged: true, inline: <<-SHELL
+        set -e
+
+        USER=vagrant
+        HOME_DIR=/home/$USER
+        SSH_DIR=$HOME_DIR/.ssh
+        AUTH_KEYS=$SSH_DIR/authorized_keys
+
+        mkdir -p "$SSH_DIR"
+        chmod 700 "$SSH_DIR"
+        touch "$AUTH_KEYS"
+        chmod 600 "$AUTH_KEYS"
+        chown -R "$USER:$USER" "$SSH_DIR"
+
+        KEY='#{PUBKEY.gsub("'", %q('"'"'))}'
+
+        # adiciona somente se ainda nao existir
+        grep -qxF "$KEY" "$AUTH_KEYS" || echo "$KEY" >> "$AUTH_KEYS"
+      SHELL
+    end
+  end
+end
+
