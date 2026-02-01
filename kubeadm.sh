@@ -6,6 +6,8 @@
 #!/bin/bash
 KUBERNETES_VERSION=v1.33
 CRIO_VERSION=v1.33
+POD_CIDR="10.244.0.0/16"
+SERVICE_CIDR="10.96.0.0/12"
 
 apt-get update
 apt-get install -y software-properties-common curl
@@ -57,26 +59,44 @@ sysctl -w net.ipv4.ip_forward=1
 # --service-cidr: Faixa de IPs para os serviços do cluster
 
 
-kubeadm init --apiserver-advertise-address="192.168.56.11" --pod-network-cidr="10.244.0.0/16" --service-cidr="10.96.0.0/12"
+if [ "$(hostname)" = "cp1" ]; then
+    echo "Iniciando o nó master cp1"
+    NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1) 
+    kubeadm init --apiserver-advertise-address="$NODE_IP" \
+      --pod-network-cidr=$POD_CIDR \
+      --service-cidr=$SERVICE_CIDR
 
-## Corrigir ip do kubelet
-sudo tee /etc/default/kubelet >/dev/null <<'EOF'
-KUBELET_EXTRA_ARGS=--node-ip=192.168.56.11
+
+    ## Corrigir ip do kubelet
+    sudo tee /etc/default/kubelet >/dev/null <<EOF
+KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
 EOF
 
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
 
-## Por estar no virtualBox, o kubelet anuncia o ip nat, e ao tentar conectar aos workoloads não consigo.
+    # Configurar kubectl para o usuário vagrant
+    mkdir -p "$HOME/.kube"
+    sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
+    sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
+
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+
+else
+echo "executando nó worker ${HOSTNAME}"
+
+NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1) 
+
+sudo tee /etc/default/kubelet >/dev/null <<EOF
+KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
+EOF
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
+fi
 
 
-# CNI - Calico e Tigera
-# https://docs.tigera.io/calico/latest/getting-started/kubernetes/quick
 
-# IMPORTANTE: CoreDNS não funciona enquanto não for aplicado um plugin de rede CNI
-
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
-kubectl create -f kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
 
 
 
