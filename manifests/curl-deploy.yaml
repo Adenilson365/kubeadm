@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: curl
+  namespace: cka
+spec:
+  selector:
+    matchLabels:
+      app: curl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: curl
+    spec:
+      containers:
+      - name: curl
+        image: ubuntu
+        command: ["bash", "-c", "apt update && apt install curl -y && sleep infinity"]

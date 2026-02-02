@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ht-web
+  namespace: cka
+spec:
+  selector:
+    app: st-web
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: st-web
+  namespace: cka
+spec:
+  selector:
+    matchLabels:
+      app: st-web
+  replicas: 2
+  serviceName: ht-web
+  template:
+    metadata:
+      labels:
+        app: st-web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.28
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - name: data
+          mountPath: /usr/shared/nginx/html
+  volumeClaimTemplates:
+   - metadata:
+       name: data
+     spec:
+       accessModes: ["ReadWriteOnce"] 
+       resources:
+         requests:
+           storage: 1Gi
+ 

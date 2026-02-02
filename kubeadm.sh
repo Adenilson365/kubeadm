@@ -8,6 +8,20 @@ KUBERNETES_VERSION=v1.33
 CRIO_VERSION=v1.33
 POD_CIDR="10.244.0.0/16"
 SERVICE_CIDR="10.96.0.0/12"
+GO_VERSION=1.25.6  
+ETCD_VERSION=v3.4.37
+
+mkdir -p /home/kubeadm
+cd /home/kubeadm || exit 1
+
+install_test() {
+    if [ $? -eq 0 ]; then
+        echo "\n\n$1 instalado com sucesso\n\n"
+    else
+        echo "\n\nFalha na instalação do $1 \n\n"
+        exit 1
+    fi
+}
 
 apt-get update
 apt-get install -y software-properties-common curl
@@ -80,8 +94,30 @@ EOF
     sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
     sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
 
-    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
-    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+   kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
+   kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+
+    echo "\n\n########---Instalando Go---#########\n\n"
+    wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
+    echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
+    source ~/.bashrc
+    go version 
+    install_test "Go"
+
+    echo "\n\n########---Instalando etcdctl---#########\n\n"
+    git clone -b $ETCD_VERSION https://github.com/etcd-io/etcd.git
+    cd etcd
+    ./build
+    echo 'export PATH="$PATH:/home/kubeadm/etcd/bin"' >> ~/.bashrc
+    source ~/.bashrc
+    etcdctl version
+    install_test "etcdctl"
+
+    echo  "\n\n########---Alias---#########\n\n"
+    echo 'alias k="kubectl"' >> ~/.bashrc
+    echo 'alias kn="kubectl config set-context --current --namespace"' >> ~/.bashrc
+    source ~/.bashrc
 
 else
 echo "executando nó worker ${HOSTNAME}"

@@ -11,6 +11,7 @@
 
 - [Como instalar KubeAdm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [CRI - Container Runtime Interface](https://kubernetes.io/docs/concepts/containers/cri/)
+- [etcd](https://etcd.io/docs/v3.4/dev-guide/interacting_v3/)
 
 ### Organização de rede
 
@@ -30,3 +31,5 @@
   pra corrigir apliquei o extra-args com o ip externo da vm.
 
 ![antes-depois-kubernetes-extra-args](./docs/assets/kubelet-extra-args.png)
+
+### Backup do ETCD
