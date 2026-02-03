@@ -100,8 +100,7 @@ EOF
     echo "\n\n########---Instalando Go---#########\n\n"
     wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
     rm -rf /usr/local/go && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
-    echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
-    source ~/.bashrc
+    export PATH=$PATH:/usr/local/go/bin
     go version 
     install_test "Go"
 
@@ -109,15 +108,10 @@ EOF
     git clone -b $ETCD_VERSION https://github.com/etcd-io/etcd.git
     cd etcd
     ./build
-    echo 'export PATH="$PATH:/home/kubeadm/etcd/bin"' >> ~/.bashrc
-    source ~/.bashrc
+    export PATH=$PATH:/home/kubeadm/etcd/bin
     etcdctl version
     install_test "etcdctl"
 
-    echo  "\n\n########---Alias---#########\n\n"
-    echo 'alias k="kubectl"' >> ~/.bashrc
-    echo 'alias kn="kubectl config set-context --current --namespace"' >> ~/.bashrc
-    source ~/.bashrc
 
 else
 echo "executando nó worker ${HOSTNAME}"
