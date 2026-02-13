@@ -1,4 +1,5 @@
 #### Comandos para atualizar kubeadm.sh ####
+### Processo serve para atualizar major e minor releases do kubernetes
 
 ### Documentação oficial para atualização do kubeadm
 ### Patch Releases: https://v1-34.docs.kubernetes.io/releases/patch-releases/
@@ -32,11 +33,12 @@ apt-mark unhold kubelet kubeadm kubectl
 
 ### Antes de atualizar os nós é necessário fazer o drain e o cordon.
 
-#kubectl drain <nome-do-node> --ignore-daemonsets --delete-local-data
+#kubectl drain <nome-do-node> --ignore-daemonsets 
 #kubectl cordon <nome-do-node>
 
 #atualizar kubeadm, kubelet e kubectl
 apt-get install -y kubelet=$KUBERNETES_VERSION.0-1.1 kubeadm=$KUBERNETES_VERSION.0-1.1 kubectl=$KUBERNETES_VERSION.0-1.1 cri-o=$CRIO_VERSION.0-1.1
+apt-get install -y kubelet=$KUBERNETES_VERSION.3-1.1 kubeadm=$KUBERNETES_VERSION.3-1.1 kubectl=$KUBERNETES_VERSION.3-1.1 cri-o=$CRIO_VERSION.3-1.1
 
 apt-mark hold kubelet kubeadm kubectl
 

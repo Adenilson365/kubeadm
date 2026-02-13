@@ -97,14 +97,14 @@ EOF
    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
 
-    echo "\n\n########---Instalando Go---#########\n\n"
+    echo "########---Instalando Go---#########"
     wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
     rm -rf /usr/local/go && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
     export PATH=$PATH:/usr/local/go/bin
     go version 
     install_test "Go"
 
-    echo "\n\n########---Instalando etcdctl---#########\n\n"
+    echo "########---Instalando etcdctl---#########"
     git clone -b $ETCD_VERSION https://github.com/etcd-io/etcd.git
     cd etcd
     ./build
