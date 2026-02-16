@@ -5,11 +5,11 @@
 - Gere as chaves com opnssl
 
 ```shell
-  USERNAME=outro
+  USERNAME=adenilson
   GROUP=cluster-wide-viewer
   CLUSTER_IP_ADDRESS=https://192.168.56.11:6443
-  CLUSTER_CONTEXT=outro
-  CLUSTER_NAME=outro
+  CLUSTER_CONTEXT=adenilson
+  CLUSTER_NAME=adenilson
 
   echo $USERNAME
   echo $GROUP
