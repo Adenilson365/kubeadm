@@ -112,6 +112,10 @@ EOF
     etcdctl version
     install_test "etcdctl"
 
+    ### Criar diretórios para etcd
+    mkdir -p /home/etcd/snapshot
+    mkdir -p /home/etcd/logs    
+    mkdir -p /home/etcd/scripts
 
 else
 echo "executando nó worker ${HOSTNAME}"

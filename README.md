@@ -32,4 +32,8 @@
 
 ![antes-depois-kubernetes-extra-args](./docs/assets/kubelet-extra-args.png)
 
-### Backup do ETCD
+### Scripts administrativos (seção em desenvolvimento)
+
+- **[Backup e Restore do ETCD](./cluster-admin/etcd/README.md)**
+
+- **[Gestão de usuários](./cluster-admin/users/README.md)**

@@ -5,18 +5,20 @@
 - Gere as chaves com opnssl
 
 ```shell
-  USERNAME=adenilson
-  GROUP=cluster-wide-viewer
+
+  USERNAME=ade
+  GROUP=user-admin
   CLUSTER_IP_ADDRESS=https://192.168.56.11:6443
-  CLUSTER_CONTEXT=adenilson
-  CLUSTER_NAME=adenilson
+  CLUSTER_CONTEXT=ade
+  CLUSTER_NAME=ade
 
   echo $USERNAME
   echo $GROUP
   echo $CLUSTER_IP_ADDRESS
   echo $CLUSTER_CONTEXT
   echo $CLUSTER_NAME
-
+  mkdir -p /home/kubeadm/users/$USERNAME
+  cd /home/kubeadm/users/$USERNAME
   openssl genrsa -out $USERNAME.pem
   openssl req -new -key $USERNAME.pem -out $USERNAME.csr -subj "/CN=$USERNAME /O=$GROUP"
   BASE64_CSR=$(cat $USERNAME.csr | base64 | tr -d "\n")
@@ -64,5 +66,5 @@ kubectl --kubeconfig ~/.kube/config-$USERNAME config set-cluster $CLUSTER_NAME -
 kubectl --kubeconfig ~/.kube/config-$USERNAME config set-credentials $USERNAME --client-certificate=${USERNAME}.crt --client-key=${USERNAME}.pem --embed-certs=true
 kubectl --kubeconfig ~/.kube/config-$USERNAME config set-context $CLUSTER_CONTEXT --cluster=${CLUSTER_NAME} --user=${USERNAME}
 kubectl --kubeconfig ~/.kube/config-$USERNAME config use-context $CLUSTER_CONTEXT
-kubectl --kubeconfig ~/.kube/config-$USERNAME get pods
+kubectl --kubeconfig ~/.kube/config-$USERNAME get pods -A
 ```
