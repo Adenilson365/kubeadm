@@ -1,5 +1,10 @@
 #### Objetivo: Práticar instalação de kubernetes On-premise com KubeADM
 
+- Instalar e atualizar componentes.
+- Quebrar e concertar componentes.
+- Personalizar componentes.
+- Administrar cluster, usuários, backups, DR, etc.
+
 ### Componentes
 
 - Container Runtime CRI-O
@@ -34,6 +39,6 @@
 
 ### Scripts administrativos (seção em desenvolvimento)
 
-- **[Backup e Restore do ETCD](./cluster-admin/etcd/README.md)**
+- **[Backup e Restore do ETCD](./cluster-admin/etcd-admin/README.md)**
 
 - **[Gestão de usuários](./cluster-admin/users/README.md)**
