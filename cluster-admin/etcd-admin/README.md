@@ -19,3 +19,9 @@ ETCDCTL_API=3 etcdctl --data-dir=/var/lib/etcd snapshot restore
 
 - --data-dir -> é o diretório novo que o etcd vai ler e armazenar dados. O diretório não pode existir.
 - Se alterar precisa substituir a configuração de volume do pod do etcd para novo path e o argumento --data-dir do command.
+
+### Testes
+
+- Lock:
+
+![demonstra-erro-de-lock](./assets/lock.png)

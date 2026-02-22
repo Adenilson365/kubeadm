@@ -16,9 +16,9 @@ cd /home/kubeadm || exit 1
 
 install_test() {
     if [ $? -eq 0 ]; then
-        echo "\n\n$1 instalado com sucesso\n\n"
+        echo "$1 instalado com sucesso"
     else
-        echo "\n\nFalha na instalação do $1 \n\n"
+        echo " Falha na instalação do $1 "
         exit 1
     fi
 }
@@ -62,7 +62,15 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 
 modprobe br_netfilter
-sysctl -w net.ipv4.ip_forward=1
+echo "br_netfilter" > /etc/modules-load.d/modules.conf
+
+# sysctl params required by setup, params persist across reboots
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
+EOF
+
+# Apply sysctl params without reboot
+sudo sysctl --system
 
 ### Kubeadm init ###
 # https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
