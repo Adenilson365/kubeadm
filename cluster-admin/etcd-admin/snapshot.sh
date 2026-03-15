@@ -55,7 +55,7 @@ require_file() {
 }
 
 # ===== End-Helpers =====
-loh "INFO" "Iniciando snapshot do etcd"
+log "INFO" "Iniciando snapshot do etcd"
 
 # === Validations ===
 log "INFO" "Iniciando validação script de snapshot do etcd"

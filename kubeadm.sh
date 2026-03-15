@@ -102,8 +102,8 @@ EOF
     sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
     sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
 
-   kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
-   kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
 
     echo "########---Instalando Go---#########"
     wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
@@ -136,12 +136,3 @@ EOF
     sudo systemctl daemon-reload
     sudo systemctl restart kubelet
 fi
-
-
-
-
-
-
-
-
-
