@@ -1,9 +1,9 @@
+#!/bin/bash
 ### Intalação Kubeadm no Ubuntu ###
 ### Dcumentação de referência: ###
 # KubeAdm: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 # calico: https://docs.tigera.io/calico/latest/about/
 
-#!/bin/bash
 KUBERNETES_VERSION=v1.33
 CRIO_VERSION=v1.33
 POD_CIDR="10.244.0.0/16"

@@ -1,0 +1,39 @@
+---
+- name: Copy and execute HAProxy script
+  hosts: control-plane-1
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: verify if kubeadm is already installed
+      ansible.builtin.command:
+        cmd: kubeadm version
+      register: kubeadm_check_installed
+      ignore_errors: true
+    - name: Copy Kubeadm setup script to the control plane node
+      ansible.builtin.copy:
+        src: ../../kubeadm.sh
+        dest: /tmp/kubeadm.sh
+        mode: "0755"
+      when: kubeadm_check_installed.rc != 0
+    - name: Execute Kubeadm setup with script
+      ansible.builtin.command:
+        cmd: /tmp/kubeadm.sh
+      when: kubeadm_check_installed.rc != 0
+    - name: Copy and execute HAProxy script
+      ansible.builtin.copy:
+        src: ../../kubernetes/haproxy_config.sh
+        dest: /tmp/haproxy_config.sh
+        mode: "0755"
+      when: kubeadm_check_installed.rc == 0
+    - name: Execute HAProxy configuration script
+      ansible.builtin.command:
+        cmd: /tmp/haproxy_config.sh
+      when: kubeadm_check_installed.rc == 0
+    - name: Fetch kubeconfig to local machine
+      ansible.builtin.fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: ./.kubeconfig
+        flat: true
+      when: kubeadm_check_installed.rc == 0
+...
