@@ -1,19 +1,23 @@
 all:
   children:
-    control-plane:
-      hosts:
-        control-plane-1:
-          ansible_host: 192.168.56.11
-        control-plane-2:
-          ansible_host: 192.168.56.12
-        control-plane-3:
-          ansible_host: 192.168.56.13
-    # workers:
-    #   hosts:
-    #     worker-1:
-    #       ansible_host: 192.168.56.21
-    #     worker-2:
-    #       ansible_host: 192.168.56.22
+    kubernetes:
+      children:
+        control-plane:
+          hosts:
+            control-plane-1:
+              ansible_host: 192.168.56.11
+            control-plane-2:
+              ansible_host: 192.168.56.12
+            control-plane-3:
+              ansible_host: 192.168.56.13
+
+        workers:
+          hosts:
+            worker-1:
+              ansible_host: 192.168.56.21
+            worker-2:
+              ansible_host: 192.168.56.22
+
     load-balancer:
       hosts:
         ha-proxy-1:
