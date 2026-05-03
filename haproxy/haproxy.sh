@@ -66,6 +66,9 @@ frontend front-cp
 backend back-cp
     balance roundrobin
     server cp1 192.168.56.11:6443 check
+    server cp2 192.168.56.12:6443 check
+    server cp3 192.168.56.13:6443 check
+
 
 listen stats
     bind *:8404

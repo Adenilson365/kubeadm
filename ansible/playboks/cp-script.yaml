@@ -23,15 +23,59 @@
 
     - name: Install and initialize kubeadm
       ansible.builtin.command:
-        cmd: /tmp/kubeadm.sh
+        cmd: bash -x /tmp/kubeadm.sh
+      register: kubeadm_install_result
       when: kubeadm_check_installed.rc != 0
+
+    # - name: Show kubeadm install output
+    #   ansible.builtin.debug:
+    #     var: kubeadm_install_result
+    #   when: kubeadm_check_installed.rc != 0
 
     - name: Check if control-plane is initialized
       ansible.builtin.stat:
         path: /etc/kubernetes/admin.conf
       register: control_plane_initialized
       when: inventory_hostname == "control-plane-1"
+    # Adicionando control-planes
+    - name: Upload control-plane certificates and get certificate key
+      ansible.builtin.command:
+        cmd: kubeadm init phase upload-certs --upload-certs
+      register: kubeadm_certificate_key_output
+      changed_when: false
+      when:
+        - inventory_hostname == "control-plane-1"
+        - control_plane_initialized.stat.exists
 
+    - name: Set certificate key fact
+      ansible.builtin.set_fact:
+        kubeadm_certificate_key: "{{ kubeadm_certificate_key_output.stdout_lines[-1] }}"
+      when:
+        - inventory_hostname == "control-plane-1"
+        - kubeadm_certificate_key_output.stdout_lines is defined
+    - name: Check if control-plane already joined
+      ansible.builtin.stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: control_plane_joined
+      when:
+        - inventory_hostname in groups['control-plane']
+        - inventory_hostname != "control-plane-1"
+    - name: Join additional control-plane nodes
+      ansible.builtin.command:
+        cmd: >-
+          {{
+            hostvars['control-plane-1']['kubeadm_join_command']['stdout']
+            | regex_replace('([0-9]{1,3}\.){3}[0-9]{1,3}:6443', lb_endpoint)
+          }}
+          --control-plane
+          --certificate-key {{ hostvars['control-plane-1']['kubeadm_certificate_key'] }}
+      when:
+        - inventory_hostname in groups['control-plane']
+        - inventory_hostname != "control-plane-1"
+        - not control_plane_joined.stat.exists
+        - hostvars['control-plane-1']['kubeadm_join_command']['stdout'] is defined
+        - hostvars['control-plane-1']['kubeadm_certificate_key'] is defined
+    # finalizando adição
     - name: Fetch kubeconfig to local machine
       ansible.builtin.fetch:
         src: /etc/kubernetes/admin.conf
@@ -40,20 +84,20 @@
       when:
         - inventory_hostname == "control-plane-1"
         - control_plane_initialized.stat.exists
-    - name: Set Haproxy endpoint in configureation
-      ansible.builtin.copy:
-        src: ../../kubernetes/haproxy_config.sh
-        dest: /tmp/haproxy_config.sh
-        mode: "0755"
-      when:
-        - inventory_hostname == "control-plane-1"
-        - control_plane_initialized.stat.exists
-    - name: Execute Haproxy configuration script
-      ansible.builtin.command:
-        cmd: /tmp/haproxy_config.sh
-      when:
-        - inventory_hostname == "control-plane-1"
-        - control_plane_initialized.stat.exists
+    # - name: Set Haproxy endpoint in configureation
+    #   ansible.builtin.copy:
+    #     src: ../../kubernetes/haproxy_config.sh
+    #     dest: /tmp/haproxy_config.sh
+    #     mode: "0755"
+    #   when:
+    #     - inventory_hostname == "control-plane-1"
+    #     - control_plane_initialized.stat.exists
+    # - name: Execute Haproxy configuration script
+    #   ansible.builtin.command:
+    #     cmd: /tmp/haproxy_config.sh
+    #   when:
+    #     - inventory_hostname == "control-plane-1"
+    #     - control_plane_initialized.stat.exists
 
     - name: Get join command from control-plane
       ansible.builtin.command:

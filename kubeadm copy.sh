@@ -80,53 +80,59 @@ sudo sysctl --system
 # Esse valor deve ser compatível com o plugin de rede que será utilizado, por exemplo, o Calico utiliza 
 # --service-cidr: Faixa de IPs para os serviços do cluster
 
-case "$(hostname)" in
-  cp1|cp2|cp3)
-    echo "Executando configuração de control-plane em $(hostname)"
-
-    NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1)
-
-    sudo tee /etc/default/kubelet >/dev/null <<EOF
-KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
-EOF
-
-    sudo systemctl daemon-reload
-    sudo systemctl restart kubelet
-    ;;
-
-  wk1|wk2)
-    echo "Executando configuração de worker em $(hostname)"
-
-    NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1)
-
-    sudo tee /etc/default/kubelet >/dev/null <<EOF
-KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
-EOF
-
-    sudo systemctl daemon-reload
-    sudo systemctl restart kubelet
-    ;;
-
-  *)
-    echo "Hostname não reconhecido: $(hostname)"
-    exit 1
-    ;;
-esac
 
 if [ "$(hostname)" = "cp1" ]; then
-  echo "Inicializando cluster HA no cp1"
+    echo "Iniciando o nó master cp1"
+    NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1) 
+    kubeadm init --apiserver-advertise-address="$NODE_IP" \
+      --pod-network-cidr=$POD_CIDR \
+      --service-cidr=$SERVICE_CIDR
 
-  kubeadm init \
-    --apiserver-advertise-address="$NODE_IP" \
-    --control-plane-endpoint="192.168.56.31:6443" \
-    --apiserver-cert-extra-sans="192.168.56.31,192.168.56.11,192.168.56.12,192.168.56.13" \
-    --upload-certs \
-    --pod-network-cidr="$POD_CIDR" \
-    --service-cidr="$SERVICE_CIDR"
 
-  mkdir -p "$HOME/.kube"
-  cp -f /etc/kubernetes/admin.conf "$HOME/.kube/config"
-  chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
+    ## Corrigir ip do kubelet
+    sudo tee /etc/default/kubelet >/dev/null <<EOF
+KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
+EOF
 
-  kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
+
+    # Configurar kubectl para o usuário vagrant
+    mkdir -p "$HOME/.kube"
+    sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
+    sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
+
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/calico.yaml
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+
+    echo "########---Instalando Go---#########"
+    wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
+    export PATH=$PATH:/usr/local/go/bin
+    go version 
+    install_test "Go"
+
+    echo "########---Instalando etcdctl---#########"
+    git clone -b $ETCD_VERSION https://github.com/etcd-io/etcd.git
+    cd etcd
+    ./build
+    export PATH=$PATH:/home/kubeadm/etcd/bin
+    etcdctl version
+    install_test "etcdctl"
+
+    ### Criar diretórios para etcd
+    mkdir -p /home/etcd/snapshot
+    mkdir -p /home/etcd/logs    
+    mkdir -p /home/etcd/scripts
+
+else
+echo "executando nó worker ${HOSTNAME}"
+
+NODE_IP=$(ip -4 -o addr show dev enp0s8 | awk '{print $4}' | cut -d/ -f1) 
+
+sudo tee /etc/default/kubelet >/dev/null <<EOF
+KUBELET_EXTRA_ARGS=--node-ip=${NODE_IP}
+EOF
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
 fi
