@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for kubeadm_init
+- name: CMD | Initialize Kubernetes cluster with kubeadm
+  ansible.builtin.import_tasks: kubeadm_init.yaml
+- name: CMD | Install Calico CNI plugin
+  ansible.builtin.import_tasks: cni_install.yaml

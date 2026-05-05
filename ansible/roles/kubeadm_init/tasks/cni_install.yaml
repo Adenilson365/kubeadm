@@ -1,0 +1,15 @@
+- name: CMD | Install Calico CNI plugin
+  ansible.builtin.command: |
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/calico.yaml --kubeconfig=/etc/kubernetes/admin.conf
+  register: calico_install_output
+- name: Debug Calico installation output
+  ansible.builtin.debug:
+    msg: calico_install_output.stdout
+
+- name: CMD | Install Tigera Calico CNI plugin
+  ansible.builtin.command: |
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/tigera-operator.yaml --kubeconfig=/etc/kubernetes/admin.conf
+  register: tigera_calico_install_output
+- name: Debug Tigera Calico installation output
+  ansible.builtin.debug:
+    msg: tigera_calico_install_output.stdout

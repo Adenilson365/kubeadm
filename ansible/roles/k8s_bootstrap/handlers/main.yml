@@ -7,3 +7,5 @@
     state: started
     enabled: true
   loop: "{{ kubernetes_packages }}"
+- name: "Reload sysctl"
+  ansible.builtin.command: sysctl --system

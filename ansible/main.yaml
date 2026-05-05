@@ -7,4 +7,12 @@
 
   roles:
     - k8s_bootstrap
+- name: "Initialize Kubernetes cluster with kubeadm"
+  hosts: control-plane-1
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
+    - kubeadm_init
 ...

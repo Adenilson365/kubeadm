@@ -17,6 +17,8 @@
 - [Como instalar KubeAdm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [CRI - Container Runtime Interface](https://kubernetes.io/docs/concepts/containers/cri/)
 - [etcd](https://etcd.io/docs/v3.4/dev-guide/interacting_v3/)
+- [HA - Setup](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
+- [HA - Topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/)
 
 ### Organização de rede
 

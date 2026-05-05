@@ -1,0 +1,29 @@
+---
+- name: SYSOPS | Disable swap
+  ansible.builtin.command: swapoff -a
+  become: true
+- name: SYSOPS | Comment swap in /etc/fstab
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*[\s]+swap[\s]+.*)$'
+    replace: '# \1'
+    backup: yes
+- name: SYSOPS | Enable kernel modules
+  ansible.builtin.command: modprobe br_netfilter
+- name: SYSOPS | Ensure kernel modules are loaded on boot
+  ansible.builtin.lineinfile:
+    path: /etc/modules-load.d/k8s.conf
+    line: "br_netfilter"
+    create: yes
+- name: SYSOPS | Set sysctl params for Kubernetes
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+  loop:
+    - { name: "net.bridge.bridge-nf-call-iptables", value: 1 }
+    - { name: "net.bridge.bridge-nf-call-ip6tables", value: 1 }
+    - { name: "net.ipv4.ip_forward", value: 1 }
+  notify: "Reload sysctl"
+...
