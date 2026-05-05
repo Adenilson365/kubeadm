@@ -1,0 +1,51 @@
+---
+- name: "Add Kubernetes and CRI-O apt keyring"
+  ansible.builtin.apt_key:
+    url: "{{  item.url }}"
+    state: present
+    keyring: "{{ item.keyring }}"
+    validate_certs: true
+  loop:
+    - {
+        url: "https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key",
+        keyring: "/etc/apt/keyrings/kubernetes-apt-keyring.gpg",
+      }
+    - {
+        url: "https://download.opensuse.org/repositories/isv:/cri-o:/stable:/{{ crio_version }}/deb/Release.key ",
+        keyring: "/etc/apt/keyrings/cri-o-apt-keyring.gpg",
+      }
+- name: "Add Kubernetes and CRI-O repositories"
+  ansible.builtin.apt_repository:
+    repo: "{{ item.repo }}"
+    state: present
+    filename: "{{ item.filename }}"
+  loop:
+    - {
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /",
+        filename: "kubernetes",
+      }
+    - {
+        repo: "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/{{ crio_version }}/deb/ /",
+        filename: "cri-o",
+      }
+- name: "APT | Update apt cache"
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "PACKAGE | Install Kubernetes {{ kubernetes_packages }}"
+  ansible.builtin.package:
+    name: "{{ kubernetes_packages }}"
+    state: present
+  loop: "{{ kubernetes_packages }}"
+
+- name: " Configure kubelet extra args"
+  ansible.builtin.lineinfile:
+    path: /etc/default/kubelet
+    regexp: "^KUBELET_EXTRA_ARGS="
+    line: 'KUBELET_EXTRA_ARGS="--node-ip={{ ansible_default_ipv4.address }}"'
+- name: "APT | Restart services"
+  ansible.builtin.service:
+    name: "cri-o"
+    state: started
+    enabled: true

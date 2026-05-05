@@ -8,8 +8,8 @@ all:
               ansible_host: 192.168.56.11
             control-plane-2:
               ansible_host: 192.168.56.12
-            control-plane-3:
-              ansible_host: 192.168.56.13
+            # control-plane-3:
+            #   ansible_host: 192.168.56.13
 
         workers:
           hosts:

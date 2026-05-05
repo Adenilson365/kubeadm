@@ -1,0 +1,15 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for k8s_bootstrap
+- name: Install base packages
+  ansible.builtin.import_tasks: packages.yaml
+- name: Configure CRI-O and Kubernetes repositories
+  ansible.builtin.import_tasks: repositories.yaml
+# - name: Disable swap
+#   ansible.builtin.import_tasks: swap.yml
+
+# - name: Configure kernel modules
+#   ansible.builtin.import_tasks: kernel.yml
+
+# - name: Configure sysctl for Kubernetes
+#   ansible.builtin.import_tasks: sysctl.yml
