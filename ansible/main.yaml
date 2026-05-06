@@ -15,4 +15,22 @@
 
   roles:
     - kubeadm_init
+- name: "Create kubeadm join command for control-plane nodes"
+  become: true
+  hosts: join_control_plane_source
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: kubeadm-control-plane-join
+      vars:
+        control_plane_create_command: true
+- name: "Join control-plane nodes to the cluster"
+  become: true
+  hosts: join_control_plane_targets
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: kubeadm-control-plane-join
+      vars:
+        control_plane_join_command: true
 ...

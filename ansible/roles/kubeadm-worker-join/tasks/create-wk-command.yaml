@@ -1,0 +1,31 @@
+---
+- name: "CMD | Generate certifcate key for kubeadm join command"
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  ansible.builtin.command: kubeadm init phase upload-certs --upload-certs
+  register: kubeadm_upload_certs
+  changed_when: false
+  when: control_plane_create_command | default(false)
+- name: "debug kubeadm upload certs output"
+  ansible.builtin.debug:
+    msg: kubeadm_upload_certs
+  when: control_plane_create_command | default(false)
+- name: "Create kubeadm join command for control nodes"
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  ansible.builtin.command: |
+    kubeadm token create --print-join-command --certificate-key {{ kubeadm_upload_certs.stdout_lines[-1] }}
+  register: kubeadm_join_command
+  changed_when: false
+  when: control_plane_create_command | default(false)
+- name: "debug kubeadm join command"
+  ansible.builtin.debug:
+    msg: "{{ kubeadm_join_command.stdout }}"
+  when: control_plane_create_command | default(false)
+- name: "Set kubeadm join command as fact"
+  ansible.builtin.set_fact:
+    kubeadm_join_command: "{{ kubeadm_join_command.stdout }}"
+  when: control_plane_create_command | default(false)
+...

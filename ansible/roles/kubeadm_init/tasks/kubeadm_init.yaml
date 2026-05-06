@@ -5,7 +5,7 @@
 
 - name: Debug kubeadm init check result
   ansible.builtin.debug:
-    msg: kubeadm_init_check.stat.exists
+    msg: "Kubeadm until init: {{ kubeadm_init_check.stat.exists }}"
 
 - name: CMD | Initialize Kubernetes cluster with kubeadm
   ansible.builtin.command: |
@@ -14,7 +14,7 @@
     --pod-network-cidr {{ pod_network_cidr }}
     --service-cidr {{ service_cidr }}
     --apiserver-cert-extra-sans {{ apiserver_cert_extra_sans | join(',') }}
-    --apiserver-advertise-address {{ ansible_default_ipv4.address }}
+    --apiserver-advertise-address {{ ansible_enp0s8.ipv4.address }}
   register: kubeadm_init_output
   when: not kubeadm_init_check.stat.exists
 

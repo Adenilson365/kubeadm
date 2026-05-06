@@ -77,6 +77,7 @@ listen stats
     stats uri /stats
     stats refresh 10s
     stats auth admin:admin123
+    stats admin if TRUE #Habilita modo admin
 EOF
 
 sudo tee /etc/systemd/system/haproxy.service > /dev/null <<'EOF'
