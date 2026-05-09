@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for k8s_bootstrap
+- name: "APT | Restart services"
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop: "{{ kubernetes_packages }}"
+- name: "Reload sysctl"
+  ansible.builtin.command: sysctl --system

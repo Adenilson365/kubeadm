@@ -1,0 +1,16 @@
+- name: Check if control-plane node is already joined to the cluster
+  ansible.builtin.stat:
+    path: /etc/kubernetes/admin.conf
+  register: kubeadm_init_check
+- name: Debug kubeadm join check result
+  ansible.builtin.debug:
+    msg: " {{ ansible_hostname }} has joined: {{ kubeadm_init_check.stat.exists }}"
+- name: CMD | Join control-plane nodes to the cluster
+  ansible.builtin.command: |
+    {{ hostvars['control-plane-1'].kubeadm_join_command }} --apiserver-advertise-address {{ ansible_enp0s8.ipv4.address }}
+  register: kubeadm_join_output
+  when: control_plane_join_command | default(false) and not kubeadm_init_check.stat.exists
+- name: Debug kubeadm join output
+  ansible.builtin.debug:
+    msg: "{{ hostvars['control-plane-1'].kubeadm_join_command }}"
+  when: control_plane_join_command | default(false) and not kubeadm_init_check.stat.exists

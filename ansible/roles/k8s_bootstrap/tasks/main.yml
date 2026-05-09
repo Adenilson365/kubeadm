@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for k8s_bootstrap
+- name: Install base packages
+  ansible.builtin.import_tasks: packages.yaml
+- name: Configure CRI-O and Kubernetes repositories
+  ansible.builtin.import_tasks: repositories.yaml
+- name: Provide sys config according to kubeadm documentation
+  ansible.builtin.import_tasks: sys-conf.yaml

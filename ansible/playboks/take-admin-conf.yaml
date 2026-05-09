@@ -1,0 +1,21 @@
+---
+- name: Take admin.conf from control-plane-1 to local machine
+  hosts: control-plane-1
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Check if control-plane is initialized
+      ansible.builtin.stat:
+        path: /etc/kubernetes/admin.conf
+      register: control_plane_initialized
+
+    - name: Fetch kubeconfig to local machine
+      ansible.builtin.fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: ./.kubeconfig
+        flat: true
+      when:
+        - inventory_hostname == "control-plane-1"
+        - control_plane_initialized.stat.exists
+...

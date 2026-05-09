@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for control-plane-join
+- name: "Include task to create kubeadm join command for control nodes"
+  include_tasks: create-join-command.yaml
+- name: "CMD | Join control-plane nodes to the cluster with kubeadm"
+  include_tasks: control-plane-join.yaml

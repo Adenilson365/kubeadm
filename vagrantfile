@@ -15,9 +15,13 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   nodes = [
-    { name: "cp1", ip: "192.168.56.11", mem: 2048, cpu: 2 },
-    { name: "cp2", ip: "192.168.56.12", mem: 2048, cpu: 2 },
-    { name: "cp3", ip: "192.168.56.13", mem: 2048, cpu: 2 }
+  { name: "ha1", ip: "192.168.56.31", mem: 1024, cpu: 1 },
+  { name: "cp1", ip: "192.168.56.11", mem: 2048, cpu: 2 },
+  { name: "cp2", ip: "192.168.56.12", mem: 2048, cpu: 2 },
+  { name: "cp3", ip: "192.168.56.13", mem: 1800, cpu: 2 },
+  #{ name: "wk1", ip: "192.168.56.21", mem: 1536, cpu: 1 },
+  { name: "wk2", ip: "192.168.56.22", mem: 1024, cpu: 1 }
+  
   ]
 
   nodes.each do |node|

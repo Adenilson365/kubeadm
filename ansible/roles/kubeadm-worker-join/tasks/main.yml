@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for kubeadm-join
+- name: Create kubeadm join command for worker nodes
+  include_tasks: create-wk-command.yaml
+- name: Join worker nodes to the cluster
+  include_tasks: control-wk-join.yaml

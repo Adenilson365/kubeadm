@@ -1,0 +1,10 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for k8s_bootstrap
+kubernetes_version: "v1.33"
+crio_version: "v1.33"
+kubernetes_packages:
+  - kubelet
+  - kubeadm
+  - kubectl
+  - cri-o

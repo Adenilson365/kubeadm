@@ -1,0 +1,10 @@
+- name: install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - apt-transport-https
+    - ca-certificates
+    - gpg
+    - software-properties-common

@@ -1,0 +1,16 @@
+---
+- name: Copy and execute HAProxy script
+  hosts: load-balancer
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Copy HAProxy setup script to the load balancer
+      ansible.builtin.copy:
+        src: ../../haproxy/haproxy.sh
+        dest: /tmp/haproxy.sh
+        mode: "0755"
+    - name: Execute HAProxy setup script
+      ansible.builtin.command:
+        cmd: /tmp/haproxy.sh
+...
