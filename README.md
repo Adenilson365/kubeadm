@@ -19,6 +19,7 @@
 - [etcd](https://etcd.io/docs/v3.4/dev-guide/interacting_v3/)
 - [HA - Setup](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
 - [HA - Topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/)
+- [Keepalived topology](https://www.redhat.com/blog/haproxy-highly-available-keepalived)
 
 ### Organização de rede
 
