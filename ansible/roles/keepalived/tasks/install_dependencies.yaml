@@ -1,11 +1,20 @@
+- name: CMD | Get installed Keepalived version
+  ansible.builtin.command:
+    cmd: keepalived --version
+  register: keepalived_installed
+  changed_when: false
+  failed_when: false
+
 - name: APT | Update apt cache
   ansible.builtin.apt:
     update_cache: yes
+  when: keepalived_installed.rc != 0
 - name: APT | Install dependencies
   ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
-- name: CMD | Download and install Keepalived
+  when: keepalived_installed.rc != 0
+- name: SHELL | Download and install Keepalived
   ansible.builtin.shell: |
     wget -q https://www.keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz -O /tmp/keepalived.tar.gz
     tar -xzf /tmp/keepalived.tar.gz -C /tmp
@@ -13,3 +22,4 @@
   args:
     executable: /bin/bash
   no_log: true
+  when: keepalived_installed.rc != 0
