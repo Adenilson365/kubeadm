@@ -1,3 +1,16 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# vars file for haproxy
+haproxy_version: "3.1.5"
+haproxy_user: "haproxy"
+haproxy_group: "haproxy"
+haproxy_config_path: "/etc/haproxy/haproxy.cfg"
+haproxy_service_name: "haproxy"
+
+packages:
+  - wget
+  - curl
+  - build-essential
+  - libssl-dev
+  - libpcre3-dev
+  - zlib1g-dev
+  - libcrypt-dev

@@ -1,0 +1,15 @@
+- name: CMD | Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+- name: CMD | install bootstrap packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+- name: CMD | Download and install HAProxy
+  ansible.builtin.shell: |
+    wget -q https://www.haproxy.org/download/3.1/src/haproxy-{{ haproxy_version }}.tar.gz -O /tmp/haproxy.tar.gz
+    tar -xzf /tmp/haproxy.tar.gz -C /tmp
+    cd /tmp/haproxy-{{ haproxy_version }} && make TARGET=linux-glibc USE_OPENSSL=1 USE_PCRE=1 USE_ZLIB=1 USE_LIBCRYPT=1 -j$(nproc) && make install
+  args:
+    executable: /bin/bash
+  no_log: true

@@ -1,3 +1,17 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # handlers file for haproxy
+
+- name: Restart haproxy
+  ansible.builtin.systemd:
+    name: "{{ haproxy_service_name }}"
+    state: restarted
+    enabled: true
+- name: Restart rsyslog
+  ansible.builtin.systemd:
+    name: rsyslog
+    state: restarted
+    enabled: true
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes

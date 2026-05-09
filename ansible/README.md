@@ -25,3 +25,14 @@
   - HAproxy L4
   - HAproxy L7
 -
+
+### AnsibleVault
+
+```shell
+ansible-vault encrypt ./ansible/roles/haproxy/vars/vault.yaml
+```
+
+- Execute a play:
+  ```shell
+  ansible-playbook -l ha-proxy-1 main.yaml --ask-vault-pass
+  ```
