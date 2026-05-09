@@ -1,11 +1,21 @@
-- name: CMD | Update apt cache
+- name: CMD | Check if HAProxy is already installed
+  ansible.builtin.command:
+    cmd: haproxy -version
+  register: haproxy_installed
+  ignore_errors: true
+  changed_when: false
+  failed_when: false
+
+- name: APT | Update apt cache
   ansible.builtin.apt:
     update_cache: yes
-- name: CMD | install bootstrap packages
+  when: haproxy_installed.rc != 0
+- name: APT | install bootstrap packages
   ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
-- name: CMD | Download and install HAProxy
+  when: haproxy_installed.rc != 0
+- name: SHELL | Download and install HAProxy
   ansible.builtin.shell: |
     wget -q https://www.haproxy.org/download/3.1/src/haproxy-{{ haproxy_version }}.tar.gz -O /tmp/haproxy.tar.gz
     tar -xzf /tmp/haproxy.tar.gz -C /tmp
@@ -13,3 +23,4 @@
   args:
     executable: /bin/bash
   no_log: true
+  when: haproxy_installed.rc != 0
