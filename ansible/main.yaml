@@ -1,20 +1,27 @@
-# ---
-# - name: "Install Kubernetes"
-#   hosts: kubernetes
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
+---
+- name: "Install HAProxy load balancer"
+  hosts: load-balancer
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - haproxy
+- name: "Install Kubernetes"
+  hosts: kubernetes
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
-#   roles:
-#     - k8s_bootstrap
-# - name: "Initialize Kubernetes cluster with kubeadm"
-#   hosts: control-plane-1
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - k8s_bootstrap
+- name: "Initialize Kubernetes cluster with kubeadm"
+  hosts: control-plane-1
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
-#   roles:
-#     - kubeadm_init
+  roles:
+    - kubeadm_init
 # - name: "Create kubeadm join command for control-plane nodes"
 #   become: true
 #   hosts: join_control_plane_source
@@ -51,11 +58,4 @@
 #   roles:
 #     - kubeadm-worker-join
 
-- name: "Install HAProxy load balancer"
-  hosts: load-balancer
-  become: true
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-  roles:
-    - haproxy
 ...

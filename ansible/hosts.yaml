@@ -28,7 +28,7 @@ all:
 
     load-balancer:
       hosts:
-        ha-proxy-1:
+        haproxy-1:
           ansible_host: 192.168.56.31
-        ha-proxy-2:
+        haproxy-2:
           ansible_host: 192.168.56.32
