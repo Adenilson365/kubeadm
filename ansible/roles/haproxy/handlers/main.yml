@@ -15,3 +15,7 @@
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: yes
+- name: Validate haproxy config
+  ansible.builtin.command:
+    cmd: haproxy -c -f /etc/haproxy/haproxy.cfg
+  changed_when: false
