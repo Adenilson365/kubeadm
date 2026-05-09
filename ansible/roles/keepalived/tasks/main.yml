@@ -1,0 +1,8 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for keepalived
+- name: Install dependencies for keepalived
+  ansible.builtin.import_tasks: install_dependencies.yaml
+
+- name: Deploy keepalived configuration
+  ansible.builtin.import_tasks: configure.yaml

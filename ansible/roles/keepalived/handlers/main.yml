@@ -1,0 +1,14 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for keepalived
+
+- name: Restart keepalived
+  ansible.builtin.service:
+    name: keepalived
+    state: restarted
+    enabled: yes
+
+- name: Daemon reload keepalived
+  ansible.builtin.systemd:
+    name: keepalived
+    daemon_reload: yes

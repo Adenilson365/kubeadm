@@ -30,5 +30,7 @@ all:
       hosts:
         haproxy-1:
           ansible_host: 192.168.56.31
+          keepalived_priority: 110
         haproxy-2:
           ansible_host: 192.168.56.32
+          keepalived_priority: 100

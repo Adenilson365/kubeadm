@@ -1,8 +1,9 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # vars file for kubeadm_init
-control_plane_endpoint: "192.168.56.31:6443"
+control_plane_endpoint: "192.168.56.30:6443"
 apiserver_cert_extra_sans:
+  - "192.168.56.30"
   - "192.168.56.31"
   - "192.168.56.32"
   - "192.168.56.11"

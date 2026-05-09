@@ -1,0 +1,15 @@
+- name: APT | Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+- name: APT | Install dependencies
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+- name: CMD | Download and install Keepalived
+  ansible.builtin.shell: |
+    wget -q https://www.keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz -O /tmp/keepalived.tar.gz
+    tar -xzf /tmp/keepalived.tar.gz -C /tmp
+    cd /tmp/keepalived-{{ keepalived_version }} && ./configure && make -j$(nproc) && make install
+  args:
+    executable: /bin/bash
+  no_log: true

@@ -6,6 +6,15 @@
     ansible_python_interpreter: /usr/bin/python3
   roles:
     - haproxy
+
+- name: "Install Keepalived for VIP management"
+  hosts: load-balancer
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - keepalived
+
 - name: "Install Kubernetes"
   hosts: kubernetes
   become: true
