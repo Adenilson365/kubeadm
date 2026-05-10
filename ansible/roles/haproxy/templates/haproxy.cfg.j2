@@ -27,6 +27,30 @@ backend back-cp
     server {{ host }} {{ hostvars[host]['ansible_host'] }}:6443 check
 {% endfor %}
 
+frontend front-app-http
+    mode tcp
+    bind *:80
+    default_backend back-app-http
+
+backend back-app-http
+    mode tcp
+    balance roundrobin
+{% for host in groups['workers'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] }}:30080 check
+{% endfor %}
+
+frontend front-app-https
+    mode tcp
+    bind *:443
+    default_backend back-app-https
+
+backend back-app-https
+    mode tcp
+    balance roundrobin
+{% for host in groups['workers'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] }}:30443 check
+{% endfor %}
+
 listen stats
     bind *:8404
     mode http
