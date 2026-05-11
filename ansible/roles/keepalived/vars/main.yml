@@ -1,0 +1,21 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for keepalived
+keepalived_version: 2.3.4
+
+packages:
+  - wget
+  - build-essential
+  - pkg-config
+  - automake
+  - autoconf
+  - libssl-dev
+  - libnl-3-dev
+  - libnl-genl-3-dev
+  - libipset-dev
+  - libxtables-dev
+  - libip4tc-dev
+  - libip6tc-dev
+  - libsystemd-dev
+
+vip_address: 192.168.56.30

@@ -1,0 +1,61 @@
+global
+    log /dev/log local0
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+    maxconn 256
+    stats socket /var/lib/haproxy/stats level admin
+
+defaults
+    log global
+    option dontlognull
+    timeout queue 1m
+    timeout connect 10s
+    timeout client 1m
+    timeout server 1m
+    timeout check 10s
+    maxconn 3000
+
+frontend front-cp
+    bind *:6443
+    default_backend back-cp
+
+backend back-cp
+    mode tcp
+    balance roundrobin
+{% for host in groups['control-plane'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] }}:6443 check
+{% endfor %}
+
+frontend front-app-http
+    mode tcp
+    bind *:80
+    default_backend back-app-http
+
+backend back-app-http
+    mode tcp
+    balance roundrobin
+{% for host in groups['workers'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] }}:30080 check
+{% endfor %}
+
+frontend front-app-https
+    mode tcp
+    bind *:443
+    default_backend back-app-https
+
+backend back-app-https
+    mode tcp
+    balance roundrobin
+{% for host in groups['workers'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] }}:30443 check
+{% endfor %}
+
+listen stats
+    bind *:8404
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+    stats admin if TRUE #Habilita modo admin

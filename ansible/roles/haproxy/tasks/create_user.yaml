@@ -1,0 +1,27 @@
+- name: SYSOPS | Create HAProxy user and group
+  ansible.builtin.group:
+    name: "{{ haproxy_group }}"
+    state: present
+- name: SYSOPS | Create HAProxy user
+  ansible.builtin.user:
+    name: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    create_home: yes
+    home: /var/lib/{{ haproxy_user }}
+    shell: /usr/bin/nologin
+    state: present
+- name: SYSOPS | Create Haproxy diretories
+  ansible.builtin.file:
+    path: /etc/haproxy
+    state: directory
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: "1755"
+
+- name: SYSOPS | Create Haproxy log directory
+  ansible.builtin.file:
+    path: /var/lib/haproxy/dev
+    state: directory
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: "1755"

@@ -1,0 +1,34 @@
+- name: VAULT | Load vault vars
+  ansible.builtin.include_vars:
+    file: vault.yaml
+
+- name: TEMPLATE | Render HAProxy config
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Validate haproxy config
+    - Restart haproxy
+
+- name: CMD | Copy configuration file
+  ansible.builtin.copy:
+    src: haproxy.conf
+    dest: "/etc/rsyslog.d/haproxy.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart rsyslog
+
+- name: COPY | Copy systemd service file
+  ansible.builtin.copy:
+    src: haproxy.service
+    dest: "/etc/systemd/system/haproxy.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart haproxy
+    - Reload systemd

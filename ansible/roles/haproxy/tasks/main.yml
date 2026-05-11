@@ -1,3 +1,9 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for haproxy
+- name: Create HAProxy user and group
+  ansible.builtin.import_tasks: create_user.yaml
+- name: Install HAProxy
+  ansible.builtin.import_tasks: install_haproxy.yaml
+- name: Configure HAProxy
+  ansible.builtin.import_tasks: configure.yaml
