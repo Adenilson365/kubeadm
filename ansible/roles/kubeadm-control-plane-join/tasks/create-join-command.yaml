@@ -3,7 +3,7 @@
   become: true
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  ansible.builtin.command: kubeadm init phase upload-certs --upload-certs
+  ansible.builtin.command: kubeadm init phase upload-certs --upload-certs --kubeconfig /etc/kubernetes/super-admin.conf
   register: kubeadm_upload_certs
   changed_when: false
   when: control_plane_create_command | default(false)
