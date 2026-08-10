@@ -1,0 +1,68 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: ZABBIX | Download Zabbix repository package
+  ansible.builtin.get_url:
+    url: "https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu22.04_all.deb"
+    dest: "/tmp/zabbix-release_latest_7.0+ubuntu22.04_all.deb"
+    mode: "0644"
+
+- name: ZABBIX | Install Zabbix repository
+  ansible.builtin.apt:
+    deb: "/tmp/zabbix-release_latest_7.0+ubuntu22.04_all.deb"
+    state: present
+
+- name: ZABBIX | Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0
+
+- name: ZABBIX | Install Zabbix Agent 2
+  ansible.builtin.apt:
+    name: zabbix-agent2
+    state: present
+
+- name: ZABBIX | Install Zabbix Agent 2 plugins
+  ansible.builtin.apt:
+    name:
+      - zabbix-agent2-plugin-mongodb
+      - zabbix-agent2-plugin-mssql
+      - zabbix-agent2-plugin-postgresql
+    state: present
+
+- name: ZABBIX | Configure etcd metrics UserParameters
+  ansible.builtin.copy:
+    dest: /etc/zabbix/zabbix_agent2.d/etcd.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      UserParameter=etcd.metrics,curl -fsS http://127.0.0.1:2381/metrics
+      UserParameter=etcd.health,curl -fsS http://127.0.0.1:2381/health
+  notify: Restart zabbix-agent2
+
+- name: ZABBIX | Configure Zabbix server
+  ansible.builtin.lineinfile:
+    path: /etc/zabbix/zabbix_agent2.conf
+    regexp: "^Server="
+    line: "Server={{ zabbix_server }}"
+  notify: Restart zabbix-agent2
+
+- name: ZABBIX | Configure Zabbix active server
+  ansible.builtin.lineinfile:
+    path: /etc/zabbix/zabbix_agent2.conf
+    regexp: "^ServerActive="
+    line: "ServerActive={{ zabbix_server }}"
+  notify: Restart zabbix-agent2
+
+- name: ZABBIX | Configure Zabbix hostname
+  ansible.builtin.lineinfile:
+    path: /etc/zabbix/zabbix_agent2.conf
+    regexp: "^Hostname="
+    line: "Hostname={{ inventory_hostname }}"
+  notify: Restart zabbix-agent2
+
+- name: ZABBIX | Enable and start Zabbix Agent 2
+  ansible.builtin.systemd:
+    name: zabbix-agent2
+    enabled: true
+    state: started
