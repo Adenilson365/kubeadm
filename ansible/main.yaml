@@ -1,71 +1,71 @@
 ---
-# - name: "Install HAProxy load balancer"
-#   hosts: load-balancer
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#   roles:
-#     - haproxy
+- name: "Install HAProxy load balancer"
+  hosts: load-balancer
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - haproxy
 
-# - name: "Install Keepalived for VIP management"
-#   hosts: load-balancer
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#   roles:
-#     - keepalived
+- name: "Install Keepalived for VIP management"
+  hosts: load-balancer
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - keepalived
 
-# - name: "Install Kubernetes"
-#   hosts: kubernetes
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
+- name: "Install Kubernetes"
+  hosts: kubernetes
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
-#   roles:
-#     - k8s_bootstrap
-# - name: "Initialize Kubernetes cluster with kubeadm"
-#   hosts: control-plane-1
-#   become: true
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - k8s_bootstrap
+- name: "Initialize Kubernetes cluster with kubeadm"
+  hosts: control-plane-1
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
-#   roles:
-#     - kubeadm_init
-# - name: "Create kubeadm join command for control-plane nodes"
-#   become: true
-#   hosts: join_control_plane_source
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#   roles:
-#     - role: kubeadm-control-plane-join
-#       vars:
-#         control_plane_create_command: true
-# - name: "Join control-plane nodes to the cluster"
-#   become: true
-#   hosts: join_control_plane_targets
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#   roles:
-#     - role: kubeadm-control-plane-join
-#       vars:
-#         control_plane_join_command: true
-# - name: "Create kubeadm join command for worker nodes"
-#   become: true
-#   hosts: join_control_plane_source
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#     control_plane_join_command: true
-#   roles:
-#     - kubeadm-worker-join
-# - name: "Join worker nodes to the cluster"
-#   become: true
-#   hosts: workers
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#     worker_join_command: "{{ hostvars['control-plane-1'].kubeadm_join_command }}"
-#     worker_join: true
-#   roles:
-#     - kubeadm-worker-join
+  roles:
+    - kubeadm_init
+- name: "Create kubeadm join command for control-plane nodes"
+  become: true
+  hosts: join_control_plane_source
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: kubeadm-control-plane-join
+      vars:
+        control_plane_create_command: true
+- name: "Join control-plane nodes to the cluster"
+  become: true
+  hosts: join_control_plane_targets
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: kubeadm-control-plane-join
+      vars:
+        control_plane_join_command: true
+- name: "Create kubeadm join command for worker nodes"
+  become: true
+  hosts: join_control_plane_source
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    control_plane_join_command: true
+  roles:
+    - kubeadm-worker-join
+- name: "Join worker nodes to the cluster"
+  become: true
+  hosts: workers
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    worker_join_command: "{{ hostvars['control-plane-1'].kubeadm_join_command }}"
+    worker_join: true
+  roles:
+    - kubeadm-worker-join
 
 - name: "Install Zabbix Agent 2"
   hosts: all:!zabbix_server

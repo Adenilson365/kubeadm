@@ -16,6 +16,9 @@ apt install -y zabbix-server-pgsql zabbix-frontend-php php8.1-pgsql zabbix-apach
 
 apt install -y zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 
+sudo -u postgres createuser --pwprompt zabbix
+sudo -u postgres createdb -O zabbix zabbix
+
 zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
 
 #/etc/zabbix/zabbix_server.conf
@@ -40,7 +43,7 @@ echo "UserParameter=etcd.health,curl -fsS http://127.0.0.1:2381/health" >> /etc/
 # Edite o arquivo de configuração do Zabbix Agent 2 para definir o hostname e o endereço do servidor Zabbix
 #vi /etc/zabbix/zabbix_agent2.conf
 # Adicione: 
-# Server=192.168.56.41
+#Server=192.168.56.41
 #ServerActive=192.168.56.41:10051
 #Hostname=<Hostneame do agente>
 
