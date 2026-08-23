@@ -4,3 +4,4 @@ bkp/
 .kubeconfig
 annotations
 .local/
+.*
