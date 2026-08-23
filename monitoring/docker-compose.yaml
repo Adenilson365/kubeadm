@@ -29,6 +29,8 @@ services:
       - ./loki/data:/loki
     ports:
       - "3100:3100"
+    networks:
+      - monitoring
 networks:
   monitoring:
     driver: bridge

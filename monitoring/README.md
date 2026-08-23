@@ -29,3 +29,7 @@ stress-ng --hdd 4 --hdd-bytes 5G --timeout 120s --metrics-brief
 ### HAproxy Instrumentation
 
 [Documentation](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/alerts-and-monitoring/prometheus/)
+
+### Documentações de apoio
+
+[Logs Linux](https://www.youtube.com/watch?v=vcP-FPTSHnU)

@@ -5,3 +5,4 @@ bkp/
 annotations
 .local/
 .*
+secrets/
