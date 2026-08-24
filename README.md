@@ -157,3 +157,11 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 - Adicionar gestão de usuários via IDP
 - Adicionar replicação segura de backups do etcd para local externo.
 - Combinar aos outros projetos.
+
+## Monitoramento
+
+#
+
+### Documentação
+
+[Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)

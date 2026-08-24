@@ -15,6 +15,7 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ["localhost:9090"]
+
   - job_name: "etcd"
     scheme: https
     tls_config:
@@ -24,7 +25,15 @@ scrape_configs:
     static_configs:
       - targets:
           ["192.168.56.11:2381", "192.168.56.12:2381", "192.168.56.13:2381"]
+
   - job_name: "kubernetes-servers"
     static_configs:
       - targets:
           ["192.168.56.11:9100", "192.168.56.12:9100", "192.168.56.13:9100"]
+  - job_name: "haproxy-servers"
+    static_configs:
+      - targets: ["192.168.56.31:9100", "192.168.56.32:9100"]
+
+  - job_name: "haproxy"
+    static_configs:
+      - targets: ["192.168.56.31:8405", "192.168.56.32:8405"]

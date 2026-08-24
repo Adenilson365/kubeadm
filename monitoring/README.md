@@ -30,6 +30,12 @@ stress-ng --hdd 4 --hdd-bytes 5G --timeout 120s --metrics-brief
 
 [Documentation](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/alerts-and-monitoring/prometheus/)
 
+[Alloy Install](https://grafana.com/docs/alloy/latest/set-up/install/linux/)
+
+- Para expor as métricas é preciso habilitar no build o prometheus-exporter com opção: `USE_PROMEX=1`
+
 ### Documentações de apoio
 
 [Logs Linux](https://www.youtube.com/watch?v=vcP-FPTSHnU)
+
+- Para
