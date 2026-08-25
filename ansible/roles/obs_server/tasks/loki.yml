@@ -1,0 +1,18 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for obs_server
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/loki/conf/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "TEMPLATE | Render Loki config"
+  ansible.builtin.template:
+    src: loki.yml.j2
+    dest: "{{ observability_root }}/loki/conf/loki.yml"
+    owner: root
+    group: root
+    mode: "0644"

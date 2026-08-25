@@ -1,0 +1,10 @@
+- name: Bootstrap Observability Server
+  ansible.builtin.import_tasks: bootstrap.yml
+- name: Render Docker Compose
+  ansible.builtin.import_tasks: compose.yml
+- name: Render Grafana config
+  ansible.builtin.import_tasks: grafana.yml
+- name: Render Loki config
+  ansible.builtin.import_tasks: loki.yml
+- name: Render Prometheus config
+  ansible.builtin.import_tasks: prometheus.yml

@@ -1,0 +1,48 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for obs_server
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/grafana/dashboards/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/grafana/conf/provisioning/dashboards/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/grafana/conf/provisioning/datasources/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "TEMPLATE | Render Grafana dashboards config"
+  ansible.builtin.template:
+    src: dashboards.yml.j2
+    dest: "{{ observability_root }}/grafana/conf/provisioning/dashboards/dashboards.yml"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "TEMPLATE | Render Grafana datasources config"
+  ansible.builtin.template:
+    src: datasources.yml.j2
+    dest: "{{ observability_root }}/grafana/conf/provisioning/datasources/datasources.yml"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "COPY | Copy Grafana dashboards"
+  ansible.builtin.copy:
+    src: dashboards/
+    dest: "{{ observability_root }}/grafana/dashboards/"
+    owner: root
+    group: root
+    mode: "0644"

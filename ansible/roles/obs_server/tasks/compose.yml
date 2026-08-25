@@ -1,0 +1,8 @@
+---
+- name: "TEMPLATE | Render Docker Composeg"
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ observability_root }}/docker-compose.yml"
+    owner: root
+    group: root
+    mode: "0644"

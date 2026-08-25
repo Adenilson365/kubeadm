@@ -1,0 +1,12 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for obs_server
+observability_root: /monitoring
+
+grafana_version: "latest"
+loki_version: "latest"
+prometheus_version: "latest"
+
+grafana_port: 3000
+prometheus_port: 9090
+loki_port: 3100

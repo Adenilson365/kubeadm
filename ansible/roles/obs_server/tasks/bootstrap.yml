@@ -1,0 +1,65 @@
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "CMD | Remove pacotes antigos docker"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - docker
+    - docker-engine
+    - docker.io
+    - containerd
+    - runc
+    - docker-compose
+    - docker-compose-v2
+    - docker-doc
+    - docker-buildx
+    - podman-docker
+
+- name: "APT | Instalar pacotes necessários para o repositório Docker"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+- name: "APT | Adicionar chave GPG do Docker"
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    keyring: /etc/apt/keyrings/docker.asc
+    validate_certs: true
+
+- name: "APT | Adicionar repositório Docker"
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+    components: [stable]
+    architectures: $(dpkg --print-architecture)
+    signed_by: /etc/apt/keyrings/docker.asc
+
+- name: "APT | Atualizar cache do apt"
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: "APT | Instalar pacotes Docker"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin

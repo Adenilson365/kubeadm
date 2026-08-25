@@ -1,0 +1,17 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for obs_server
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/prometheus/conf/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+- name: "TEMPLATE | Render Prometheus config"
+  ansible.builtin.template:
+    src: prometheus.yml.j2
+    dest: "{{ observability_root }}/prometheus/conf/prometheus.yml"
+    owner: root
+    group: root
+    mode: "0644"
