@@ -30,7 +30,8 @@
     owner: root
     group: root
     mode: "0644"
-
+  notify:
+    - "Restart Docker Compose"
 - name: "TEMPLATE | Render Grafana datasources config"
   ansible.builtin.template:
     src: datasources.yml.j2
@@ -38,7 +39,8 @@
     owner: root
     group: root
     mode: "0644"
-
+  notify:
+    - "Restart Docker Compose"
 - name: "COPY | Copy Grafana dashboards"
   ansible.builtin.copy:
     src: dashboards/
@@ -46,3 +48,5 @@
     owner: root
     group: root
     mode: "0644"
+  notify:
+    - "Restart Docker Compose"

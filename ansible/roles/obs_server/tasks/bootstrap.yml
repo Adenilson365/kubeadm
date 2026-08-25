@@ -32,22 +32,22 @@
     - curl
     - gnupg
     - lsb-release
-- name: "APT | Adicionar chave GPG do Docker"
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-    keyring: /etc/apt/keyrings/docker.asc
-    validate_certs: true
+# - name: "APT | Adicionar chave GPG do Docker"
+#   ansible.builtin.apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+#     keyring: /etc/apt/keyrings/docker.asc
+#     validate_certs: true
 
 - name: "APT | Adicionar repositório Docker"
   ansible.builtin.deb822_repository:
     name: docker
     types: deb
     uris: https://download.docker.com/linux/ubuntu
-    suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+    suites: "{{ ansible_facts['distribution_release'] }}"
     components: [stable]
-    architectures: $(dpkg --print-architecture)
-    signed_by: /etc/apt/keyrings/docker.asc
+    architectures: "{{ ansible_facts['architecture'] }}"
+    signed_by: https://download.docker.com/linux/ubuntu/gpg
 
 - name: "APT | Atualizar cache do apt"
   ansible.builtin.apt:
@@ -63,3 +63,6 @@
     - containerd.io
     - docker-buildx-plugin
     - docker-compose-plugin
+  notify:
+    - "Restart Docker"
+    - "Restart Docker Compose"

@@ -8,7 +8,7 @@
   vars:
     alloy_config: |
       logging {
-      level = "warn"
+      level = "info"
       }
 
       loki.write "default" {
@@ -69,4 +69,35 @@
       target_label = "job"
       replacement  = "journald"
       }
+      }
+
+      prometheus.exporter.unix "node" {
+      }
+
+      prometheus.scrape "node" {
+        targets    = prometheus.exporter.unix.node.targets
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
+      }
+
+      prometheus.remote_write "prometheus" {
+        endpoint {
+          url = "http://192.168.56.41:9090/api/v1/write"
+        }
+      }
+
+      prometheus.scrape "etcd" {
+        targets = [
+          {
+            "__address__" = "127.0.0.1:2381",
+            "job"         = "etcd",
+            "instance"    = constants.hostname,
+
+          },
+        ]
+
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
       }
