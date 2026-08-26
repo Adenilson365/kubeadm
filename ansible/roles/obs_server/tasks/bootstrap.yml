@@ -46,7 +46,8 @@
     uris: https://download.docker.com/linux/ubuntu
     suites: "{{ ansible_facts['distribution_release'] }}"
     components: [stable]
-    architectures: "{{ ansible_facts['architecture'] }}"
+    architectures:
+      - amd64
     signed_by: https://download.docker.com/linux/ubuntu/gpg
 
 - name: "APT | Atualizar cache do apt"

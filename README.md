@@ -164,4 +164,5 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 
 ### Documentação
 
-[Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)
+- [Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)
+- [Config alloy para prometheus](https://grafana.com/docs/alloy/latest/reference/components/prometheus/)

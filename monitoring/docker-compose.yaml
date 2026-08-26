@@ -5,7 +5,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./secrets/:/etc/prometheus/secrets/kubernetes/
     networks:
       - monitoring
@@ -15,8 +15,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/conf/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/conf/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     networks:
       - monitoring
@@ -25,7 +25,7 @@ services:
     container_name: loki
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
-      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+      - ./loki/conf/loki.yml:/etc/loki/loki-config.yml
       - ./loki/data:/loki
     ports:
       - "3100:3100"
