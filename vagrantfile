@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   #{ name: "cp3", ip: "192.168.56.13", mem: 1800, cpu: 2 },
   #{ name: "wk1", ip: "192.168.56.21", mem: 1024, cpu: 1 },
   # { name: "wk2", ip: "192.168.56.22", mem: 1024, cpu: 1 }
-  { name: "zabbix", ip: "192.168.56.41", mem: 2048, cpu: 2 }
+  { name: "observability", ip: "192.168.56.41", mem: 2048, cpu: 2 }
 
   
   ]

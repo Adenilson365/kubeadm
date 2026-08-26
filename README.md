@@ -165,4 +165,10 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 ### Documentação
 
 - [Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)
+- [Ansible Role alloy](https://galaxy.ansible.com/ui/repo/published/grafana/grafana/content/role/alloy/)
 - [Config alloy para prometheus](https://grafana.com/docs/alloy/latest/reference/components/prometheus/)
+
+### Alloy
+
+- Global: componente instala o exporter alloy, com uma configuração padrão pela `role: alloy`
+- Componente: Cada componente do ambiente configura o scrape do seu exporter alloy de acordo com o contexto, `task: configure_observability.yaml`

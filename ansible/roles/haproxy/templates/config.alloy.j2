@@ -1,13 +1,4 @@
-#SPDX-License-Identifier: MIT-0
----
-# tasks file for alloy
 
-- name: Install Alloy
-  ansible.builtin.include_role:
-    name: grafana.grafana.alloy
-  vars:
-    alloy_version: "1.19.0"
-    alloy_config: |
       logging {
       level = "info"
       }
@@ -88,11 +79,11 @@
         }
       }
 
-      prometheus.scrape "etcd" {
+      prometheus.scrape "haproxy" {
         targets = [
           {
-            "__address__" = "127.0.0.1:2381",
-            "job"         = "etcd",
+            "__address__" = "127.0.0.1:8404",
+            "job"         = "haproxy",
             "instance"    = constants.hostname,
 
           },

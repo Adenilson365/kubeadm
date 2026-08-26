@@ -34,7 +34,7 @@ all:
         haproxy-2:
           ansible_host: 192.168.56.32
           keepalived_priority: 100
-    zabbix_server:
+    observability:
       hosts:
-        zabbix-server:
+        observability-server:
           ansible_host: 192.168.56.41
