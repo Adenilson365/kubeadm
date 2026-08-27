@@ -17,3 +17,8 @@
     docker compose -f /monitoring/docker-compose.yml up -d
   args:
     executable: /bin/bash
+- name: Restart Alloy
+  ansible.builtin.systemd:
+    name: alloy
+    state: restarted
+    enabled: true

@@ -8,3 +8,5 @@
   ansible.builtin.import_tasks: loki.yml
 - name: Render Prometheus config
   ansible.builtin.import_tasks: prometheus.yml
+- name: Configure observability alloy collector
+  ansible.builtin.import_tasks: configure_observability.yaml

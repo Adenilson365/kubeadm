@@ -5,3 +5,5 @@
   include_tasks: create-wk-command.yaml
 - name: Join worker nodes to the cluster
   include_tasks: control-wk-join.yaml
+- name: Configure observability alloy collector
+  ansible.builtin.import_tasks: configure_observability.yaml

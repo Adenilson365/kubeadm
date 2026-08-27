@@ -5,3 +5,5 @@
   include_tasks: create-join-command.yaml
 - name: "CMD | Join control-plane nodes to the cluster with kubeadm"
   include_tasks: control-plane-join.yaml
+- name: Configure observability alloy collector
+  ansible.builtin.import_tasks: configure_observability.yaml

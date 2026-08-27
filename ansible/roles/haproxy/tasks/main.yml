@@ -7,5 +7,5 @@
   ansible.builtin.import_tasks: install_haproxy.yaml
 - name: Configure HAProxy
   ansible.builtin.import_tasks: configure.yaml
-- name: Configure observability for HAProxy
+- name: Configure observability alloy collector
   ansible.builtin.import_tasks: configure_observability.yaml

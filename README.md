@@ -83,7 +83,7 @@
 
 ```shell
 cd ansible/
-ansible-playbook main.yaml --ask-vault-pass
+ansible-playbook main.yml --ask-vault-pass
 ```
 
 - Para acessar localmente kubernetes use:
