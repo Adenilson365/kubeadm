@@ -167,6 +167,7 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 - [Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)
 - [Ansible Role alloy](https://galaxy.ansible.com/ui/repo/published/grafana/grafana/content/role/alloy/)
 - [Config alloy para prometheus](https://grafana.com/docs/alloy/latest/reference/components/prometheus/)
+- [Alertmanager](https://prometheus.io/docs/alerting/latest/configuration/)
 
 ### Alloy
 

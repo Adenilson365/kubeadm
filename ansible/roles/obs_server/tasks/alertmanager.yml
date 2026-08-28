@@ -1,0 +1,7 @@
+- name: "TEMPLATE | Adiciona arquivo de configuração do Alertmanager"
+  ansible.builtin.template:
+    src: "config.alertmanager.j2"
+    dest: "/etc/alertmanager/config.yml"
+  become: true
+  notify:
+    - Restart docker

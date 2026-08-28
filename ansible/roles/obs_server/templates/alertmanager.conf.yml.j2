@@ -1,0 +1,21 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "default"
+  group_by: # Para agrupar e evitar spam de notificações, podemos agrupar por alertname, cluster e namespace.
+    - alertname
+    - cluster
+    - namespace
+
+  group_wait: 30s # tempo de espera até notificar e assim em uma mesma notificação agrupar todos os alertas que chegarem nesse tempo.
+  group_interval: 5m # tempo de espera até notificar novamente e assim em uma mesma notificação agrupar todos os alertas que chegarem nesse tempo.
+  repeat_interval: 30m # tempo de espera até repetir a notificação.
+
+receivers:
+  - name: "default"
+    telegram_configs:
+      - send_resolved: true
+      - api_url: "https://api.telegram.org"
+        bot_token: "{{ telegram_bot_token }}"
+        chat_id: "{{ telegram_chat_id }}"

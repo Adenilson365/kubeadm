@@ -31,6 +31,19 @@ services:
       - "3100:3100"
     networks:
       - monitoring
+  alertmanager:
+    image: prom/alertmanager:v0.34.0
+    container_name: alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/config.yml"
+      - "--storage.path=/alertmanager"
+    volumes:
+      - ./alertmanager/conf/config.yml:/etc/alertmanager/config.yml
+      - ./alertmanager/data:/alertmanager
+    ports:
+      - "9093:9093"
+    networks:
+      - monitoring
 networks:
   monitoring:
     driver: bridge
