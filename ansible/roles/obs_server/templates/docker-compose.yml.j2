@@ -1,12 +1,12 @@
 services:
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:{{ prometheus_version }}
     container_name: prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-remote-write-receiver"    
     ports:
-      - "9090:9090"
+      - "{{ prometheus_port }}:{{ prometheus_port }}"
     volumes:
       - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./secrets/:/etc/prometheus/secrets/kubernetes/
@@ -14,10 +14,10 @@ services:
     networks:
       - monitoring
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:{{ grafana_version }}
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "{{ grafana_port }}:{{ grafana_port }}"
     volumes:
       - ./grafana/conf/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
       - ./grafana/conf/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
@@ -25,18 +25,19 @@ services:
     networks:
       - monitoring
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:{{ loki_version }}
     container_name: loki
     command: -config.file=/etc/loki/loki-config.yml
     volumes:
       - ./loki/conf/loki.yml:/etc/loki/loki-config.yml
       - ./loki/data:/loki
     ports:
-      - "3100:3100"
+      - "{{ loki_http_port }}:{{ loki_http_port }}"
+      - "{{ loki_grpc_port }}:{{ loki_grpc_port }}"
     networks:
       - monitoring
   alertmanager:
-    image: prom/alertmanager:v0.34.0
+    image: prom/alertmanager:{{ alertmanager_version }}
     container_name: alertmanager
     command:
       - "--config.file=/etc/alertmanager/config.yml"
@@ -45,7 +46,7 @@ services:
       - ./alertmanager/conf/alertmanager.yml:/etc/alertmanager/config.yml
       - ./alertmanager/data:/alertmanager
     ports:
-      - "9093:9093"
+      - "{{ alertmanager_port }}:{{ alertmanager_port }}"
     networks:
       - monitoring
 networks:

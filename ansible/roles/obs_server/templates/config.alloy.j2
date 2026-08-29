@@ -5,7 +5,7 @@
 
       loki.write "default" {
       endpoint {
-      url = "http://192.168.56.41:3100/loki/api/v1/push"
+      url = "{{ external_loki_url }}/loki/api/v1/push"
       }
       }
 
@@ -75,7 +75,7 @@
 
       prometheus.remote_write "prometheus" {
         endpoint {
-          url = "http://192.168.56.41:9090/api/v1/write"
+          url = "{{ external_prometheus_url }}/api/v1/write"
         }
       }
 
