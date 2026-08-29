@@ -8,6 +8,13 @@
     mode: "0755"
     owner: root
     group: root
+- name: "TASK | Criar um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/prometheus/conf/rules/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
 - name: "TEMPLATE | Render Prometheus config"
   ansible.builtin.template:
     src: prometheus.yml.j2

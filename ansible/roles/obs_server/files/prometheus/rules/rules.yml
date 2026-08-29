@@ -1,0 +1,37 @@
+groups:
+  - name: server-cpu-alerts
+    rules:
+      - alert: HighCPUUsageServer
+        expr: |
+          100 * (
+            1 - avg by(instance) (
+              rate(node_cpu_seconds_total{mode="idle"}[5m])
+            )
+          ) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: server
+        annotations:
+          summary: "High CPU usage detected on server {{ $labels.instance }}"
+          description: "The server {{ $labels.instance }} has been using more than 80% CPU for the last 5 minutes."
+
+  - name: server-memory-alerts
+    rules:
+      - alert: HighMemoryUsageServer
+        expr: |
+          (
+            1 -
+            (
+              node_memory_MemAvailable_bytes
+              /
+              node_memory_MemTotal_bytes
+            )
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: server
+        annotations:
+          summary: "High memory usage detected on server {{ $labels.instance }}"
+          description: "The server {{ $labels.instance }} has been using more than 80% memory for the last 5 minutes."

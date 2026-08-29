@@ -10,6 +10,7 @@ services:
     volumes:
       - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./secrets/:/etc/prometheus/secrets/kubernetes/
+      - ./prometheus/conf/rules:/etc/prometheus/rules/
     networks:
       - monitoring
   grafana:
@@ -41,7 +42,7 @@ services:
       - "--config.file=/etc/alertmanager/config.yml"
       - "--storage.path=/alertmanager"
     volumes:
-      - ./alertmanager/conf/config.yml:/etc/alertmanager/config.yml
+      - ./alertmanager/conf/alertmanager.yml:/etc/alertmanager/config.yml
       - ./alertmanager/data:/alertmanager
     ports:
       - "9093:9093"

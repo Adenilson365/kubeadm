@@ -1,7 +1,33 @@
+- name: "TASK | Cria um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/alertmanager/conf/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "TASK | Cria um diretório no servidor remoto"
+  ansible.builtin.file:
+    path: /{{ observability_root }}/prometheus/conf/rules/
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: "COPY | Copy Prometheus rules"
+  ansible.builtin.copy:
+    src: prometheus/rules/
+    dest: "{{ observability_root }}/prometheus/conf/rules/"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - "Restart Docker Compose"
+
 - name: "TEMPLATE | Adiciona arquivo de configuração do Alertmanager"
   ansible.builtin.template:
-    src: "config.alertmanager.j2"
-    dest: "/etc/alertmanager/config.yml"
+    src: "alertmanager.conf.yml.j2"
+    dest: "/{{ observability_root }}/alertmanager/conf/alertmanager.yml"
   become: true
   notify:
-    - Restart docker
+    - "Restart Docker Compose"

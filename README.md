@@ -11,7 +11,7 @@
 
 ### Diagrama kubernetes HA
 
-![Diagrama de arquitetura](./docs/assets/kubeadm.drawio.png)
+![Diagrama de arquitetura](./docs/assets/kubeadm-HA.jpg)
 
 ### Tecnologias
 
@@ -21,6 +21,7 @@
 - Ansible - Para automação e idempotência da gestão de configuração
 - Vagrant - Para automação do VirtualBox
 - Shellscript - Scripts base (refatorados para ansible-playbooks).
+- Monitoramento - [Veja aqui](./obs.md)
 
 ###
 
@@ -157,19 +158,3 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 - Adicionar gestão de usuários via IDP
 - Adicionar replicação segura de backups do etcd para local externo.
 - Combinar aos outros projetos.
-
-## Monitoramento
-
-#
-
-### Documentação
-
-- [Ansible Collection Grafana](https://github.com/grafana/grafana-ansible-collection)
-- [Ansible Role alloy](https://galaxy.ansible.com/ui/repo/published/grafana/grafana/content/role/alloy/)
-- [Config alloy para prometheus](https://grafana.com/docs/alloy/latest/reference/components/prometheus/)
-- [Alertmanager](https://prometheus.io/docs/alerting/latest/configuration/)
-
-### Alloy
-
-- Global: componente instala o exporter alloy, com uma configuração padrão pela `role: alloy`
-- Componente: Cada componente do ambiente configura o scrape do seu exporter alloy de acordo com o contexto, `task: configure_observability.yaml`
