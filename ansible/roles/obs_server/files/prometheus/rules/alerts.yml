@@ -1,17 +1,15 @@
 groups:
-  - name: server_cpu_alerts
+  - name: InfrastructureAlerts
     rules:
       - alert: HighCPUUsage
-        expr: instance:cpu_usage:rate5m > 30
+        expr: instance:cpu_usage:rate5m > 80
         for: 5m
         labels:
           severity: critical
           scope: "infrastructure"
         annotations:
-          summary: "High CPU usage detected on {{ $labels.instance }}"
-          description: "CPU usage is above 80% for more than 5 minutes."
-  - name: server_memory_alerts
-    rules:
+          summary: "Alto uso de CPU em {{ $labels.instance }}"
+          description: "Uso de CPU acima de 80% por mais de 5 minutos."
       - alert: HighMemoryUsage
         expr: instance:memory_usage:rate5m > 80
         for: 5m
@@ -19,9 +17,9 @@ groups:
           severity: critical
           scope: "infrastructure"
         annotations:
-          summary: "High Memory usage detected on {{ $labels.instance }}"
-          description: "Memory usage is above 80% for more than 5 minutes."
-  - name: etcd_leader_alerts
+          summary: "Alto uso de memória em {{ $labels.instance }}"
+          description: "Uso de memória acima de 80% por mais de 5 minutos."
+  - name: EtcdAlerts
     rules:
       - alert: EtcdLeaderNotFound
         expr: max(etcd_server_has_leader) == 0
@@ -30,5 +28,23 @@ groups:
           severity: critical
           scope: "etcd"
         annotations:
-          summary: "Etcd cluster has no leader"
-          description: "No etcd member has reported an active leader for more than 1 minute."
+          summary: "Cluster ETCD sem líder ativo"
+          description: "O cluster ETCD não possui líder ativo. Isso pode indicar problemas de quorum ou falhas na comunicação entre os nós do cluster. Verifique a saúde do cluster ETCD e a conectividade entre os nós. Valide se há mais alertas relacionados a infraestrutura."
+      - alert: EtcdHighChangesInLeader
+        expr: instance:leader_changes_seen_total:max5m > 5
+        for: 5m
+        labels:
+          severity: warning
+          scope: "etcd"
+        annotations:
+          summary: "Muitas mudanças de líder no cluster ETCD"
+          description: "O cluster ETCD está experimentando muitas mudanças de líder (mais de 5 em 5 minutos). Isso pode indicar instabilidade no cluster. Verifique a saúde do cluster ETCD e a conectividade entre os nós."
+      - alert: EtcdHighWalFsyncDuration
+        expr: instance:etcd_wal_fsync_duration_seconds:histogram_quantile_99 > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          scope: "etcd"
+        annotations:
+          summary: "Alta latência de fsync no ETCD"
+          description: "O tempo de fsync do ETCD está acima de 0.5 segundos (percentil 99). Isso pode indicar problemas de desempenho no armazenamento subjacente. Verifique a saúde do cluster ETCD e o desempenho de infraestrutura."

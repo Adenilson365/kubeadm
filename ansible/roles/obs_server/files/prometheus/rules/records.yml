@@ -24,3 +24,12 @@ groups:
               node_memory_MemTotal_bytes
             )
           ) * 100
+  - name: etcd_records
+    interval: 15s
+    rules:
+      - record: instance:leader_changes_seen_total:max5m
+        expr: |
+          max(increase(etcd_server_leader_changes_seen_total[5m]))
+      - record: instance:etcd_wal_fsync_duration_seconds:histogram_quantile_99
+        expr: |
+          histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) by (le))
