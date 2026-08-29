@@ -1,0 +1,26 @@
+---
+groups:
+  - name: server_cpu_records
+    interval: 15s
+    rules:
+      #level:metric:operationduration
+      - record: instance:cpu_usage:rate5m
+        expr: |
+          100 * (
+            1 - avg by(instance) (
+              rate(node_cpu_seconds_total{mode="idle"}[5m])
+            )
+          )
+  - name: server_memory_records
+    interval: 15s
+    rules:
+      - record: instance:memory_usage:rate5m
+        expr: |
+          (
+            1 -
+            (
+              node_memory_MemAvailable_bytes
+              /
+              node_memory_MemTotal_bytes
+            )
+          ) * 100

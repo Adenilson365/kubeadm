@@ -19,5 +19,21 @@ receivers:
     telegram_configs:
       - send_resolved: true
         api_url: "https://api.telegram.org"
-        bot_token: "teste"
-        chat_id: 1315654645
+        bot_token: "{{ telegram_bot_token }}"
+        chat_id: {{ telegram_chat_id }}
+        parse_mode: "HTML"
+        message: |
+{% raw %}
+          {{ if eq .Status "firing" }}🚨 <b>ALERTA ATIVO</b>{{ else }}✅ <b>ALERTA RESOLVIDO</b>{{ end }}
+
+          <b>Alerta:</b> {{ .CommonLabels.alertname }}
+          <b>Severidade:</b> {{ .CommonLabels.severity }}
+          <b>Componente:</b> {{ .CommonLabels.scope }}
+
+          {{ range .Alerts }}
+          <b>Resumo:</b> {{ .Annotations.summary }}
+          <b>Descrição:</b> {{ .Annotations.description }}
+
+          <b>Início:</b> {{ .StartsAt }}
+          {{ end }}
+{% endraw %}

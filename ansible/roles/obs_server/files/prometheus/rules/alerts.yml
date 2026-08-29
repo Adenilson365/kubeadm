@@ -1,0 +1,34 @@
+groups:
+  - name: server_cpu_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: instance:cpu_usage:rate5m > 30
+        for: 5m
+        labels:
+          severity: critical
+          scope: "infrastructure"
+        annotations:
+          summary: "High CPU usage detected on {{ $labels.instance }}"
+          description: "CPU usage is above 80% for more than 5 minutes."
+  - name: server_memory_alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: instance:memory_usage:rate5m > 80
+        for: 5m
+        labels:
+          severity: critical
+          scope: "infrastructure"
+        annotations:
+          summary: "High Memory usage detected on {{ $labels.instance }}"
+          description: "Memory usage is above 80% for more than 5 minutes."
+  - name: etcd_leader_alerts
+    rules:
+      - alert: EtcdLeaderNotFound
+        expr: max(etcd_server_has_leader) == 0
+        for: 1m
+        labels:
+          severity: critical
+          scope: "etcd"
+        annotations:
+          summary: "Etcd cluster has no leader"
+          description: "No etcd member has reported an active leader for more than 1 minute."
