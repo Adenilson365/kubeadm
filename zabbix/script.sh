@@ -43,8 +43,8 @@ echo "UserParameter=etcd.health,curl -fsS http://127.0.0.1:2381/health" >> /etc/
 # Edite o arquivo de configuração do Zabbix Agent 2 para definir o hostname e o endereço do servidor Zabbix
 #vi /etc/zabbix/zabbix_agent2.conf
 # Adicione: 
-#Server=192.168.56.41
-#ServerActive=192.168.56.41:10051
+#Server=192.168.200.41
+#ServerActive=192.168.200.41:10051
 #Hostname=<Hostneame do agente>
 
 systemctl restart zabbix-agent2

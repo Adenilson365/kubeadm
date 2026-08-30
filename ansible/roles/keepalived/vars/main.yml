@@ -18,4 +18,4 @@ packages:
   - libip6tc-dev
   - libsystemd-dev
 
-vip_address: 192.168.56.30
+vip_address: 192.168.200.30

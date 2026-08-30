@@ -4,7 +4,7 @@
 - Para snapshot comando:
 
 ```shell
-ETCDCTL_API=3 etcdctl --endpoints=https://192.168.56.11:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt  --key=/etc/kubernetes/pki/etcd/server.key snapshot save /home/etcd/snapshot-etcd-$(date "+%Y-%m-%d_%H-%M-%S")
+ETCDCTL_API=3 etcdctl --endpoints=https://192.168.200.11:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt  --key=/etc/kubernetes/pki/etcd/server.key snapshot save /home/etcd/snapshot-etcd-$(date "+%Y-%m-%d_%H-%M-%S")
 ```
 
 - exporte a variável: ETCDCTL_API=3

@@ -107,8 +107,8 @@ ansible-playbook -l control-plane-1 playbooks/take-admin-conf.yaml
 kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manifests/httpd.yaml
 ```
 
-- Painel HAproxy deve ficar disponível na 192.168.56.30:8084/stats
-- Aplicações devem ficar disponiveis na: 192.168.56.30
+- Painel HAproxy deve ficar disponível na 192.168.200.30:8084/stats
+- Aplicações devem ficar disponiveis na: 192.168.200.30
 
 <details>
 <summary>Validações</summary>

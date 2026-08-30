@@ -2,8 +2,8 @@
 ---
 # Variaveis Globais
 observability_root: /monitoring
-external_loki_url: http://192.168.56.41:3100
-external_prometheus_url: http://192.168.56.41:9090
+external_loki_url: http://192.168.200.41:3100
+external_prometheus_url: http://192.168.200.41:9090
 
 # Variaveis Grafana
 grafana_version: "13.0"

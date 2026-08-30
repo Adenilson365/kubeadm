@@ -1,7 +1,7 @@
 - Necessário adicionar no list
 
 ```
-    - --listen-metrics-urls=http://127.0.0.1:2381,https://192.168.56.12:2381
+    - --listen-metrics-urls=http://127.0.0.1:2381,https://192.168.200.12:2381
 
 ```
 
@@ -16,7 +16,7 @@
 - Curl para teste endpoint metricas
 
 ```
-curl --cacert /etc/kubernetes/pki/etcd/ca.crt      --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt      --key /etc/kubernetes/pki/etcd/healthcheck-client.key      https://192.168.56.11:2381/metrics
+curl --cacert /etc/kubernetes/pki/etcd/ca.crt      --cert /etc/kubernetes/pki/etcd/healthcheck-client.crt      --key /etc/kubernetes/pki/etcd/healthcheck-client.key      https://192.168.200.11:2381/metrics
 
 ```
 

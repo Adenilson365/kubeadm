@@ -52,7 +52,7 @@ vrrp_instance VRRP1 {
     }
 
     virtual_ipaddress {
-        192.168.56.30
+        192.168.200.30
     }
 }
 EOF

@@ -15,14 +15,14 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   nodes = [
-  { name: "ha1", ip: "192.168.56.31", mem: 500, cpu: 1 },
-  #{ name: "ha2", ip: "192.168.56.32", mem: 500, cpu: 1 },
-  { name: "cp1", ip: "192.168.56.11", mem: 1800, cpu: 2 },
-  { name: "cp2", ip: "192.168.56.12", mem: 1800, cpu: 2 },
-  #{ name: "cp3", ip: "192.168.56.13", mem: 1800, cpu: 2 },
-  #{ name: "wk1", ip: "192.168.56.21", mem: 1024, cpu: 1 },
-  # { name: "wk2", ip: "192.168.56.22", mem: 1024, cpu: 1 }
-  { name: "obs", ip: "192.168.56.41", mem: 2048, cpu: 2 }
+  { name: "ha1", ip: "192.168.200.31", mem: 500, cpu: 1 },
+  { name: "ha2", ip: "192.168.200.32", mem: 500, cpu: 1 },
+  { name: "cp1", ip: "192.168.200.11", mem: 1800, cpu: 2 },
+  { name: "cp2", ip: "192.168.200.12", mem: 1800, cpu: 2 },
+  #{ name: "cp3", ip: "192.168.200.13", mem: 1800, cpu: 2 },
+  #{ name: "wk1", ip: "192.168.200.21", mem: 1024, cpu: 1 },
+  # { name: "wk2", ip: "192.168.200.22", mem: 1024, cpu: 1 }
+  { name: "obs", ip: "192.168.200.41", mem: 2048, cpu: 2 }
 
   
   ]
@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
   nodes.each do |node|
     config.vm.define node[:name] do |vm|
       vm.vm.hostname = node[:name]
-      vm.vm.network "private_network", ip: node[:ip]
+      vm.vm.network "public_network", ip: node[:ip]
 
       vm.vm.provider "virtualbox" do |vb|
         vb.name = "k8s-#{node[:name]}"

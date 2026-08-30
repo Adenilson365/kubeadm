@@ -13,7 +13,7 @@ LOG_DIR="${LOG_DIR:-/home/etcd/logs}"
 SNAPSHOT_LOG="${SNAPSHOT_LOG:-$LOG_DIR/snapshot.log}"
 LOCK_FILE="${LOCK_FILE:-/var/lock/etcd-snapshot.lock}"
 
-ENDPOINT="${ENDPOINT:-https://192.168.56.11:2379}"
+ENDPOINT="${ENDPOINT:-https://192.168.200.11:2379}"
 CACERT="${CACERT:-/etc/kubernetes/pki/etcd/ca.crt}"
 CERT="${CERT:-/etc/kubernetes/pki/etcd/server.crt}"
 KEY="${KEY:-/etc/kubernetes/pki/etcd/server.key}"

@@ -118,8 +118,8 @@ if [ "$(hostname)" = "cp1" ]; then
 
   kubeadm init \
     --apiserver-advertise-address="$NODE_IP" \
-    --control-plane-endpoint="192.168.56.31:6443" \
-    --apiserver-cert-extra-sans="192.168.56.31,192.168.56.11,192.168.56.12,192.168.56.13" \
+    --control-plane-endpoint="192.168.200.31:6443" \
+    --apiserver-cert-extra-sans="192.168.200.31,192.168.200.11,192.168.200.12,192.168.200.13" \
     --upload-certs \
     --pod-network-cidr="$POD_CIDR" \
     --service-cidr="$SERVICE_CIDR"

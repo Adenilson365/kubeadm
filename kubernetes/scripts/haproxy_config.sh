@@ -5,11 +5,11 @@ cat > /etc/kubernetes/kubeadm-config.yaml <<'EOF'
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 kubernetesVersion: v1.33.11
-controlPlaneEndpoint: "192.168.56.31:6443"
+controlPlaneEndpoint: "192.168.200.31:6443"
 apiServer:
   certSANs:
-    - "192.168.56.31"
-    - "192.168.56.11"
+    - "192.168.200.31"
+    - "192.168.200.11"
 EOF
 
 cd /etc/kubernetes/pki
