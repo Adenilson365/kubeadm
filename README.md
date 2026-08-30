@@ -13,6 +13,12 @@
 
 ![Diagrama de arquitetura](./docs/assets/kubeadm-HA.jpg)
 
+### Arquitetura de monitoria
+
+![Diagrama arquitetura de observabilidade](./docs/assets/kubeadm-obs.jpg)
+
+[Documentação sobre Monitoria](./obs.md)
+
 ### Tecnologias
 
 - KubeADM - Kubernetes on-premises

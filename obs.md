@@ -58,17 +58,54 @@ O foco principal deste projeto é a integração entre os componentes de observa
 
 ## Componentes
 
-### Alloy
+### Alloy Collector
 
-- Global: componente instala o exporter alloy, com uma configuração padrão pela `role: alloy`
-- Componente: Cada componente do ambiente configura o scrape do seu exporter alloy de acordo com o contexto, `task: configure_observability.yaml`
+- Justiativa:
+  - Usado como único collector de telemetria, logging, métricas, e possibilidade de traces.
+  - Integrado/parte da stack grafana
+  - Capaz de fazer scrape no formato prometheus, dessa forma é possível ter um único componente de coleta.
+- Configuração e instalação:
+  - Global: `role: alloy` instala em todas as máquinas o agent alloy, com configuração default.
+    - Usei a ansible-role recomendada pela própria documentação, sem alterações.
+  - Componetes: Cada host do ambiente configura o scrape do seu exporter alloy de acordo com o contexto, `task: configure_observability.yaml` em todas as roles.
+    - Exemplo: Haproxy faz coleta de seus logs e seu endpoint específico, enquanto control-planes coletam métricas do etcd.
+    - Sempre que um arquivo é alterado o alloy é restartado via handler
+  - Todos os arquivos de configuração são via ansible-template.
 
 ### Prometheus
 
+- Justificativa:
+  - Usado como backend de métricas e alert-rules baseado em métricas.
+  - Iniciei com endpoint write habilitado, pois o alloy será responsável pela coleta e envio de toda a telemetria.
+- Instalaçao e configuração
+  - Instalado via `role: obs_server`, sobe na stack docker compose, junto com demais componentes. `ansible/roles/obs_server/tasks/compose.yml`
+
 ### Loki
+
+- Justificativa:
+  - Usado como backend de logging e alert-rules baseado em padrão de logs.
+  - Integrado ao grafana como datasource, e acessado via explorer.
 
 ### Prometheus Alertmanager
 
+- Justificativa:
+  - Roteador de alertas e notificações baseado em alertas recebidos do Prometheus ou loki.
+
 ### Grafana Dashboards
 
+-
+
 ### Kube-state-metrics
+
+- Para coleta de métricas de objetos do kubernetes.
+
+### Logging
+
+[Documentação k8s sobre Conceitos em logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+
+- Habilitei coleta de logs do journald para coleta dos componentes que estão como serviços.
+  - kubelet
+  - containerd
+- Habilitei coleta de arquivos de log personalizados como haproxy, auth, kernel
+- A idéia é que caso necessário, basta adicionar ao conf.alloy uma nova fonte de logs.
+-

@@ -32,12 +32,6 @@
     - curl
     - gnupg
     - lsb-release
-# - name: "APT | Adicionar chave GPG do Docker"
-#   ansible.builtin.apt_key:
-#     url: https://download.docker.com/linux/ubuntu/gpg
-#     state: present
-#     keyring: /etc/apt/keyrings/docker.asc
-#     validate_certs: true
 
 - name: "APT | Adicionar repositório Docker"
   ansible.builtin.deb822_repository:
