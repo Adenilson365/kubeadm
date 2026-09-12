@@ -45,7 +45,7 @@ pattern_ingester:
     loki_address: localhost:{{ loki_http_port }}
 
 ruler:
-  alertmanager_url: http://{alertmanager_host}:{{ alertmanager_port }}
+  alertmanager_url: http://{{alertmanager_host}}:{{ alertmanager_port }}
 
 frontend:
   encoding: protobuf
