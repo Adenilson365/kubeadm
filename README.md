@@ -160,7 +160,4 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 
 ### Próximos Passos:
 
-- Adicionar componente de storage
-- Adicionar gestão de usuários via IDP
-- Adicionar replicação segura de backups do etcd para local externo.
-- Combinar aos outros projetos.
+- [Próximos Passos](./next-steps.md)
