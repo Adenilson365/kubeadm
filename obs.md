@@ -23,7 +23,7 @@ Toda a infraestrutura e configuração do laboratório é gerenciada por
 A stack de observabilidade foi adicionada ao laboratório com os seguintes
 objetivos:
 
-- praticar conceitos de observabilidade em ambientes Kubernetes;
+- aplicar conceitos de observabilidade em ambientes Kubernetes;
 - centralizar métricas e logs da infraestrutura;
 - observar componentes críticos do control plane;
 - acompanhar a saúde do cluster etcd;
@@ -108,4 +108,3 @@ O foco principal deste projeto é a integração entre os componentes de observa
   - containerd
 - Habilitei coleta de arquivos de log personalizados como haproxy, auth, kernel
 - A idéia é que caso necessário, basta adicionar ao conf.alloy uma nova fonte de logs.
--
