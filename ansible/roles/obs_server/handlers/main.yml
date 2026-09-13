@@ -1,0 +1,24 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for obs_server
+- name: "Restart Docker"
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - docker
+- name: "Reload sysctl"
+  ansible.builtin.command: sysctl --system
+
+- name: Restart Docker Compose
+  ansible.builtin.shell: |
+    docker compose -f /monitoring/docker-compose.yml down &&
+    docker compose -f /monitoring/docker-compose.yml up -d
+  args:
+    executable: /bin/bash
+- name: Restart Alloy
+  ansible.builtin.systemd:
+    name: alloy
+    state: restarted
+    enabled: true

@@ -11,7 +11,13 @@
 
 ### Diagrama kubernetes HA
 
-![Diagrama de arquitetura](./docs/assets/kubeadm.drawio.png)
+![Diagrama de arquitetura](./docs/assets/kubeadm-HA.jpg)
+
+### Arquitetura de monitoria
+
+![Diagrama arquitetura de observabilidade](./docs/assets/kubeadm-obs.jpg)
+
+[Documentação sobre Monitoria](./obs.md)
 
 ### Tecnologias
 
@@ -21,6 +27,7 @@
 - Ansible - Para automação e idempotência da gestão de configuração
 - Vagrant - Para automação do VirtualBox
 - Shellscript - Scripts base (refatorados para ansible-playbooks).
+- Monitoramento - [Veja aqui](./obs.md)
 
 ###
 
@@ -83,7 +90,7 @@
 
 ```shell
 cd ansible/
-ansible-playbook main.yaml --ask-vault-pass
+ansible-playbook main.yml --ask-vault-pass
 ```
 
 - Para acessar localmente kubernetes use:
@@ -153,7 +160,4 @@ kubectl apply --kubeconfig=./ansible/playbooks/.kubeconfig -f ./kubernetes/manif
 
 ### Próximos Passos:
 
-- Adicionar componente de storage
-- Adicionar gestão de usuários via IDP
-- Adicionar replicação segura de backups do etcd para local externo.
-- Combinar aos outros projetos.
+- [Próximos Passos](./next-steps.md)

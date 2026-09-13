@@ -1,0 +1,75 @@
+alloy:
+  configMap:
+    content: |-
+      logging {
+        level  = "info"
+        format = "logfmt"
+      }
+
+      //
+      // PROMETHEUS
+      //
+
+      prometheus.remote_write "prometheus" {
+        endpoint {
+          url = "http://192.168.56.41:9090/api/v1/write"
+        }
+      }
+
+      prometheus.operator.servicemonitors "services" {
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
+      }
+
+      prometheus.operator.podmonitors "pods" {
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
+      }
+
+      //
+      // LOKI
+      //
+
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+
+      discovery.relabel "pod_logs" {
+        targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          target_label  = "node"
+        }
+      }
+
+      loki.source.kubernetes "pods" {
+        targets = discovery.relabel.pod_logs.output
+
+        forward_to = [
+          loki.write.default.receiver,
+        ]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://192.168.56.41:3100/loki/api/v1/push"
+        }
+      }

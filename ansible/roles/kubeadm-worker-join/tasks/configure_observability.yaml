@@ -1,0 +1,8 @@
+- name: "TEMPLATE | Adiciona arquivo de configuração do Alloy"
+  ansible.builtin.template:
+    src: "config.alloy.j2"
+    dest: "/etc/alloy/config.alloy"
+  become: true
+  when: woker_join | default(false)
+  notify:
+    - Restart Alloy

@@ -39,6 +39,12 @@ backend back-app-http
     server {{ host }} {{ hostvars[host]['ansible_host'] }}:30080 check
 {% endfor %}
 
+frontend prometheus
+    bind *:8405
+    mode http
+    http-request use-service prometheus-exporter if { path /metrics }
+    no log
+    
 frontend front-app-https
     mode tcp
     bind *:443
@@ -50,6 +56,7 @@ backend back-app-https
 {% for host in groups['workers'] %}
     server {{ host }} {{ hostvars[host]['ansible_host'] }}:30443 check
 {% endfor %}
+
 
 listen stats
     bind *:8404

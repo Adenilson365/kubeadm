@@ -4,3 +4,5 @@ bkp/
 .kubeconfig
 annotations
 .local/
+.*
+secrets/

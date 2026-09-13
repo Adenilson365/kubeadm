@@ -1,0 +1,96 @@
+
+      logging {
+      level = "info"
+      }
+
+      loki.write "default" {
+      endpoint {
+      url = "http://192.168.56.41:3100/loki/api/v1/push"
+      }
+      }
+
+      loki.source.file "linux_logs" {
+      targets = [
+      {
+      __path__ = "/var/log/syslog",
+      job      = "linux",
+      host     = constants.hostname,
+      log_type = "syslog",
+      },
+      {
+      __path__ = "/var/log/auth.log",
+      job      = "linux",
+      host     = constants.hostname,
+      log_type = "auth",
+      },
+      {
+      __path__ = "/var/log/kern.log",
+      job      = "linux",
+      host     = constants.hostname,
+      log_type = "kernel",
+      },
+      {
+      __path__ = "/var/log/haproxy.log",
+      job      = "haproxy",
+      host     = constants.hostname,
+      log_type = "haproxy",
+      },
+      ]
+
+      forward_to = [loki.write.default.receiver]
+      }
+
+      loki.source.journal "systemd" {
+      forward_to = [loki.relabel.journal.receiver]
+      }
+
+      loki.relabel "journal" {
+      forward_to = [loki.write.default.receiver]
+
+      rule {
+      source_labels = ["__journal__hostname"]
+      target_label  = "host"
+      }
+
+      rule {
+      source_labels = ["__journal__systemd_unit"]
+      target_label  = "unit"
+      }
+
+      rule {
+      target_label = "job"
+      replacement  = "journald"
+      }
+      }
+
+      prometheus.exporter.unix "node" {
+      }
+
+      prometheus.scrape "node" {
+        targets    = prometheus.exporter.unix.node.targets
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
+      }
+
+      prometheus.remote_write "prometheus" {
+        endpoint {
+          url = "http://192.168.56.41:9090/api/v1/write"
+        }
+      }
+
+      prometheus.scrape "etcd" {
+        targets = [
+          {
+            "__address__" = "127.0.0.1:2381",
+            "job"         = "etcd",
+            "instance"    = constants.hostname,
+
+          },
+        ]
+
+        forward_to = [
+          prometheus.remote_write.prometheus.receiver,
+        ]
+      }
+

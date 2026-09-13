@@ -1,0 +1,39 @@
+
+#https://prometheus.io/docs/alerting/latest/configuration/#file-layout-and-global-settings
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "default"
+  group_by: # Para agrupar e evitar spam de notificações, podemos agrupar por alertname, cluster e namespace.
+    - alertname
+    - cluster
+    - namespace
+
+  group_wait: 30s # tempo de espera até notificar e assim em uma mesma notificação agrupar todos os alertas que chegarem nesse tempo.
+  group_interval: 5m # tempo de espera até notificar novamente e assim em uma mesma notificação agrupar todos os alertas que chegarem nesse tempo.
+  repeat_interval: 30m # tempo de espera até repetir a notificação.
+
+receivers:
+  - name: "default"
+    telegram_configs:
+      - send_resolved: true
+        api_url: "{{ telegram_api_url }}"
+        bot_token: "{{ telegram_bot_token }}"
+        chat_id: {{ telegram_chat_id }}
+        parse_mode: "HTML"
+        message: |
+{% raw %}
+          {{ if eq .Status "firing" }}🚨 <b>ALERTA ATIVO</b>{{ else }}✅ <b>ALERTA RESOLVIDO</b>{{ end }}
+
+          <b>Alerta:</b> {{ .CommonLabels.alertname }}
+          <b>Severidade:</b> {{ .CommonLabels.severity }}
+          <b>Componente:</b> {{ .CommonLabels.scope }}
+
+          {{ range .Alerts }}
+          <b>Resumo:</b> {{ .Annotations.summary }}
+          <b>Descrição:</b> {{ .Annotations.description }}
+
+          <b>Início:</b> {{ .StartsAt }}
+          {{ end }}
+{% endraw %}

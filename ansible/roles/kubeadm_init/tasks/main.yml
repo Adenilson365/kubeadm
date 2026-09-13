@@ -5,3 +5,5 @@
   ansible.builtin.import_tasks: kubeadm_init.yaml
 - name: CMD | Install Calico CNI plugin
   ansible.builtin.import_tasks: cni_install.yaml
+- name: Configure observability alloy collector
+  ansible.builtin.import_tasks: configure_observability.yaml
